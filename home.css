@@ -1,0 +1,136 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+a {
+    color: inherit;
+}
+
+#return-pollak-lib {
+    position: absolute;
+    width: 190px;
+    top: 150px;
+    background-color: #c7d6e7;
+    padding: 10px;
+    display: flex;
+}
+
+#contact {
+    position: absolute;
+    width: 160px;
+    padding: 10px 15px 10px 15px;
+    top: 280px;
+    background-color: #f2f2f2;
+    left: 50%;
+    transform: translate(260%, 0);
+
+}
+
+#split {
+    margin-bottom: 10px;
+    margin-top: 5px;
+    border-top: 1px solid rgb(140, 139, 139);
+}
+
+#nav-bar {
+    background-color: #01274c;
+    display: flex;
+    flex-direction: column;
+}
+
+#uni-title {
+    display: flex;
+    align-items: center;
+    color: white;
+    font-family: 'Crimson Text', Times, serif;
+    margin: 10px 0 10px 10px;
+    justify-content: space-between;
+}
+
+#main-title {
+    display: flex;
+    color: white;
+    font-family: 'Crimson Text', Times, serif;
+    font-size: 25px;
+    justify-content: center;
+    padding: 20px 0 20px 0;
+    background-color: #0b355f;
+    width: 100%;
+}
+
+#intro {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+}
+
+#study-room-img {
+    width: 900px;
+    margin: 50px 0 50px 0;
+}
+
+#intro-1 {
+    font-size: 20px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.intro-2 {
+    width: 720px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.button-start {
+    background-color: rgb(250, 147, 3);
+    padding: 10px 15px 10px 15px;
+    border-radius: 10px;
+    color: white;
+    margin-bottom: 50px;
+    cursor: pointer;
+    transition: background-color ease-in-out 0.1s;
+}
+
+.button-start:hover {
+    background-color: rgb(235, 141, 10);
+    transition: background-color ease-in-out 0.1s;
+}
+
+#footer {
+    display: flex;
+    padding: 50px 0 50px 0;
+    justify-content: center;
+    align-items: center;
+    background-color: #01274c;
+    color: white;
+    font-family: 'Crimson Text', Times, serif;
+    font-size: 20px;
+}
+
+#csuf-logo {
+    width: 150px;
+    padding-right: 100px;
+}
+
+@media (max-width: 1438px) {
+    #contact{display: none;}
+}
+
+@media (max-width: 1350px) {
+    #study-room-img {margin-top: 120px}
+}
+
+@media (max-width: 890px) {
+    #study-room-img{width: 80%;}
+    .intro-2 {width: 580px;}
+    #footer{flex-direction: column; text-align: center; }
+    #csuf-logo{padding: 0 0 20px 0;}
+}
+
+@media (max-width: 700px) {
+    #intro-1 {width: 300px}
+    .intro-2 {width: 80%;}
+}
