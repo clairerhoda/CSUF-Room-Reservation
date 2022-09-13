@@ -84,7 +84,7 @@ a {
     margin-bottom: 30px;
 }
 
-.button-start {
+#button-start {
     background-color: rgb(250, 147, 3);
     padding: 10px 15px 10px 15px;
     border-radius: 10px;
@@ -94,7 +94,7 @@ a {
     transition: background-color ease-in-out 0.1s;
 }
 
-.button-start:hover {
+#button-start:hover {
     background-color: rgb(235, 141, 10);
     transition: background-color ease-in-out 0.1s;
 }

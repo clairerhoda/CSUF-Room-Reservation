@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSUF Room Reservation</title>
     <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="icon" href="images/csuf-logo2.png">
-
 </head>
 <body>
     <a href="https://www.library.fullerton.edu/">
@@ -28,12 +28,17 @@
         </div>
         <div id="main-title">Study Room Reservation</div>
     </div>
-    <div id="intro">
-        <img id="study-room-img" src="images/studyroom.jpeg" alt="Pollak Library Study Room">
-        <div id="intro-1">Welcome to the Study Room Reservation Page</div>
-        <div class="intro-2">All study room are available in the Pollak Library. Students have a selection of room options depening on their party size or room utlities such as white boards, number of chairs, etc. Rooms can be used from 30 minutes to 3 hours. A room can be reserved no more than 2 weeks in advance. If you would like to reserve a room, click the Reserve a Study Room button below to get started.</div>
-        <div id="button-start">Reserve a Study Room</div>
+    
+    <div id="box1">
+        <div>To continue onto reservering a room, please enter your CSUF login credentials.</div>
+        <div id="login-box">
+            <label id="label">Username:</label>
+            <input>
+            <label id="label">Password:</label>
+            <input>
+        </div>
     </div>
+
     <div id="footer">
         <img id="csuf-logo" src="images/csuf-logo.png" alt="CSUF School Logo">
         <div>
@@ -44,8 +49,5 @@
             </div>
         </div>
     </div>
-
-    <script type="module" src="./home.js" charset="utf-8"></script>
-
 </body>
 </html>
