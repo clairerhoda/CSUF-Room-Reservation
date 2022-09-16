@@ -1,12 +1,113 @@
+body {
+    width: 100%;
+}
+#go-back {
+    position: absolute;
+    width: 90px;
+    top: 150px;
+    background-color: #c7d6e7;
+    padding: 10px;
+    display: flex;
+    border-radius: 0 5px 5px 0;
+}
+
+#contents {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+#pillar-img {
+    opacity: 50%;
+    height: 100%;
+    width: 500px;
+}
+
 #box1 {
     display: flex;
     flex-direction: column;
-    width: 100%;
     align-items: center;
+    justify-content: center;
+    width: 500px;
+}
+
+#box2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 500px;
 }
 
 #login-box {
     display: flex;
     flex-direction: column;
+    background-color: #e9f0f7;
+    height: 290px;
+    width: 300px;
+    justify-content: center;
+    padding: 0 30px 0 30px;
 }
 
+#login-instruct {
+    margin: 0 0 20px 0;
+}
+
+.label {
+    color: black;
+    margin-bottom: 5px;
+    font-size: 17px;
+}
+
+#username-input {
+    margin-bottom: 15px;
+    border: none;
+    height: 28px;
+    padding: 0 15px 0 10px;
+    font-size: 16px;
+}
+
+#password-input {
+    margin-bottom: 30px;
+    border: none;
+    height: 28px;
+    padding: 0 20px 0 10px;
+    font-size: 16px;
+}
+
+#login-btn {
+    display: flex;
+    color: white;
+    background-color: #0b355f;
+    text-align: center;
+    padding: 7px 0 7px 0;
+    width: 80px;
+    font-size: 15px;
+    align-self: flex-end;
+    justify-content: center;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color ease-in-out 0.1s;
+}
+
+#login-btn:hover{
+    background-color: #1b4876;
+    transition: background-color ease-in-out 0.1s;
+}
+
+@media (max-width: 1000px) {
+    #box1 {height: 560px; width: 100%; }
+    #box1::before {content: "";
+        background-image: url('images/pillar-img.jpeg');
+        position: absolute;
+        height: 700px;
+        background-repeat: no-repeat;
+        background-size: auto 160%;
+        top: 90px;
+        right: 0px;
+        bottom: 0px;
+        left: 0px;
+        z-index: -1;
+        background-position: center -110px;
+        opacity: 50%;}
+    #box2 {display: none;}
+}
