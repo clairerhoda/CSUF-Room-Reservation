@@ -14,30 +14,36 @@
     <link rel="icon" href="images/csuf-logo2.png">
 </head>
 <body>
-    <a href="https://www.library.fullerton.edu/">
-        <div id="return-pollak-lib"> 
-            <div style="font-size: 18px;"> &#8249;&nbsp;&nbsp;</div> 
-            <div style="line-height: 23px">Return to Pollak Library</div>
+    <a href="/RoomReservation/home.html">
+        <div id="go-back"> 
+            <div style="padding-left: 5px; font-size: 18px;"> &#8249;&nbsp;&nbsp;</div> 
+            <div style="line-height: 23px">Go Back</div>
         </div>
     </a>
-    <div id="contact"><div style="text-align: center;">Questions?</div><div id="split"></div><div style="margin-bottom: 10px">Contact Us:</div><i style="font-size:15px; padding-right: 8px" class="fa">&#xf095;</i>(657) 278-2721
-    <div style="color:rgb(27, 27, 180);">libcirc@fullerton.edu</div></div>
+    
     <div id="nav-bar">
         <div id="uni-title">CALIFORNIA STATE UNIVERSITY, FULLERTON 
             <img style="padding-right: 20px" width="20px" src="images/csuf-logo1.png" alt="CSUF School Logo">
         </div>
         <div id="main-title">Study Room Reservation</div>
     </div>
-    
-    <div id="box1">
-        <div>To continue onto reservering a room, please enter your CSUF login credentials.</div>
-        <div id="login-box">
-            <label id="label">Username:</label>
-            <input>
-            <label id="label">Password:</label>
-            <input>
+
+    <div id="contents">
+        <div id="box1">
+            <div id="login-box">
+                <div id="login-instruct">To continue onto reservering a room, please enter your CSUF login credentials.</div>
+                <label class="label">Username</label>
+                <input id="username-input" type="text">
+                <label class="label">Password</label>
+                <input id="password-input" type="password">
+                <div id="login-btn">Login</div>
+            </div>
+        </div>
+        <div id="box2">
+            <img id="pillar-img" src="images/pillar-img.jpeg" alt="CSUF pillar image">
         </div>
     </div>
+    
 
     <div id="footer">
         <img id="csuf-logo" src="images/csuf-logo.png" alt="CSUF School Logo">
@@ -49,5 +55,8 @@
             </div>
         </div>
     </div>
+
+    <script type="module" src="./login.js" charset="utf-8"></script>
+
 </body>
 </html>
