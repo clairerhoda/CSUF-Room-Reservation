@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSUF Room Reservation</title>
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="reservation.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="icon" href="images/csuf-logo2.png">
+</head>
+<body>
+    <a href="./login.html">
+        <div id="go-back"> 
+            <div style="padding-left: 5px; font-size: 18px;"> &#8249;&nbsp;&nbsp;</div> 
+            <div style="line-height: 23px">Go Back</div>
+        </div>
+    </a>
+    
+    <div id="nav-bar">
+        <div id="uni-title">CALIFORNIA STATE UNIVERSITY, FULLERTON 
+            <img style="padding-right: 20px" width="20px" src="images/csuf-logo1.png" alt="CSUF School Logo">
+        </div>
+        <div id="main-title">Study Room Reservation</div>
+    </div>
+
+    <div id="contents">
+        <div id="form">
+            <div style="height: 50px;">
+                <div id="back-btn">&#8249;</div>
+            </div>
+            <div id="form-selection">
+                <div id="selection-description">Select Number of Students (1-14) </div>
+                <select id="student-amount">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                  </select>
+                <input type="date" id="date-start">
+                <select id="half-hour-increm"></select>
+                <select id="time-start"></select>
+                <div id="invalidInput">
+                    <div id="invalidText">Please select a day</div>
+                </div>
+            </div>
+            <div id="next-btn">Next</div>
+        </div>
+    </div>
+   
+    
+
+    <div id="footer">
+        <img id="csuf-logo" src="images/csuf-logo.png" alt="CSUF School Logo">
+        <div>
+            <div >CSUF Room Reservation Services</div>
+            <div style="font-size: 16px;">
+                <div id="split"></div><i style="font-size:15px; padding-right: 8px" class="fa">&#xf095;</i>(657) 278-2721
+                <div style="padding-top: 5px; color:rgb(172, 172, 253);">libcirc@fullerton.edu</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./reservation.js" charset="utf-8"></script>
+
+</body>
+</html>
