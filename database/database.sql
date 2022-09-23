@@ -48,7 +48,7 @@ CREATE TABLE rooms (
 	room_id INT DEFAULT pseudo_encrypt(nextval('seq')::INT) UNIQUE PRIMARY KEY NOT NULL,
 	floor INT,
 	room_number INT,
-	"capacity" INT NOT NULL.
+	capacity INT NOT NULL,
 	description TEXT,
 	reservation_lock BOOL NOT NULL
 );
@@ -63,7 +63,6 @@ CREATE TABLE reservations	(
 	purpose VARCHAR(100) NOT NULL,
 	number_of_people INT NOT NULL,
 	created_at TIMESTAMP without time zone DEFAULT now() NOT NULL,
-	cancelled_pending_reopen TIMESTAMP without time zone DEFAULT now() NOT NULL,
 	is_deleted BOOL NOT NULL
 );
 
