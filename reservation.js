@@ -101,6 +101,7 @@ nextButton.addEventListener("click", (e) => {
     }
 
 
+
     if (pageNumber == 3) {
         selectionDescription.textContent = "How Long Do You Want to Reserve the Room?";
 
@@ -110,22 +111,35 @@ nextButton.addEventListener("click", (e) => {
         // TODO: get all possible available 30 min increments from db
         // Options: 30 min, 1 hour, 1 hour 30, 2 hour, 2 hour 30, 3 hour.
         // Note: Times available will remove 3 hours first, 2 hour 30, and so on.
-        var minutes = 30;
+        var minutesIncrement = 30;
 
         if (halfHourIncrements.length == 0) {
             for (var j = 0; j < 6; j++) {
                 var option = document.createElement("option");
-                if (minutes > 30) {
-                    option.text = timeConvert(minutes);
+                if (minutesIncrement > 30) {
+                    option.text = timeConvert(minutesIncrement);
                 } else {
-                    option.text = minutes + " min";
+                    option.text = minutesIncrement + " min";
                 }
-                option.value = minutes;
+                option.value = minutesIncrement;
                 halfHourIncrements.appendChild(option);
-                minutes += 30;
+                minutesIncrement += 30;
             }
         }
     }
+
+    const convertTime12to24 = (time12h) => {
+        const [time, modifier] = time12h.split(' ');
+        let [hours, minutes] = time.split(':');
+      
+        if (hours === '12')
+          hours = '00';
+      
+        if (modifier === 'PM') 
+          hours = parseInt(hours, 10) + 12;
+      
+        return `${hours}:${minutes}`;
+      }
 
     if (pageNumber == 4) {
         selectionDescription.textContent = "Select an Available Reservation Start Time";
@@ -133,14 +147,15 @@ nextButton.addEventListener("click", (e) => {
         halfHourIncrements.style.display = "none";
         timeStart.style.display = "flex";
 
-        // TOTO: retreive all possible start times in 30 min increments
+        // TODO: retreive all possible start times in 30 min increments
+        // retreive room id(s) for available room(s)
         // Example: start time can be 9AM or 9:30AM
         // Note: with reserve length in mind, calculate available start times effeciently.
         var sampleTimes = ["9:00 AM", "9:30 AM", "12:00 PM", "12:30 PM", "4:00 PM"];
         if (timeStart.length == 0) {
             for (var j = 0; j < sampleTimes.length; j++) {
                 var option = document.createElement("option");
-                option.value = sampleTimes[j];
+                option.value = convertTime12to24(sampleTimes[j]);
                 option.text = sampleTimes[j];
                 timeStart.appendChild(option);
             }
@@ -160,6 +175,41 @@ nextButton.addEventListener("click", (e) => {
     if (pageNumber == 6) {
         backButton.style.display = "none";
 
+        // fetch room id and user id
+        // add reservation to database
+        const createdAt = new Date().toISOString();
+        console.log(createdAt);
+        const isDeleted = false;
+        const purpose = ""; // may add purpose section later
+
+        const [month, day, year] = dateStart.value.split('-');
+        const [hour, minute] = timeStart.value.split(':');
+        var startTimeDate = new Date(+year, +month - 1, +day, +hour, +minute, +"00");
+        const startTime = startTimeDate.toISOString();
+        var endTimeDate  = new Date(startTimeDate.getTime() + parseInt(halfHourIncrements.value)*60000);
+        const endTime = endTimeDate.toISOString();
+        //remove after fetching
+        const roomId = 1750691250;
+        const userId = 483424269;
+
+        const xhr = new XMLHttpRequest()
+        xhr.open('POST', `http://localhost:3000/reservations/${userId}/${roomId}`)
+        console.log(startTime, endTime)
+        const rsObj = new ReservationDetails(roomId, userId, startTime, endTime, purpose, studentCount, createdAt, isDeleted);
+        console.log(rsObj);
+
+        // Set the Content-Type 
+        xhr.setRequestHeader('Content-Type', 'application/json')
+        xhr.responseType = 'json'
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log(this.response)
+            }
+        }
+        // JSON encoding 
+        const jsonStr = JSON.stringify(rsObj)
+        xhr.send(jsonStr)
+
         var parts = dateStart.value.split('-');
         var mydate = new Date(parts[0], parts[1] - 1, parts[2]);
         var dateFormatted = (mydate.toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"long", day:"numeric"}) );
@@ -168,10 +218,21 @@ nextButton.addEventListener("click", (e) => {
 
         document.getElementById("next-btn").textContent = "Finish";
     }
-
+   
     if (pageNumber == 7) {
         location.reload();
         location.href='home.html';
     }
 
 })
+
+function ReservationDetails(roomId, userId, startTime, endTime, purpose, numberOfPeople, createdAt, isDeleted) {
+	this.roomId = roomId
+    this.userId = userId
+    this.startTime = startTime
+    this.endTime = endTime
+    this.purpose = purpose
+    this.numberOfPeople = numberOfPeople
+    this.createdAt = createdAt
+    this.isDeleted = isDeleted
+}
