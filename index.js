@@ -4,6 +4,10 @@ const app = express()
 const db = require('./queries')
 const port = 3000
 
+const cors = require('cors')
+app.use(cors())
+
+
 app.use(bodyParser.json())
 app.use(
   bodyParser.urlencoded({
@@ -18,7 +22,14 @@ app.get('/', (request, response) => {
 app.get('/users', db.getUsers)
 app.get('/users/:id', db.getUserById)
 app.post('/users', db.createUser)
-// app.put('/users/:id', db.updateUser)
+app.get('/rooms', db.getAllRooms)
+app.get('/rooms/:capacity', db.getAvailableRooms)
+app.get('/rooms/:id', db.getRoomById)
+app.post('/rooms', db.createRoom)
+app.get('/reservations', db.getReservations)
+app.get('/reservations/:id', db.getReservationById)
+app.post('/reservations/:userId/:roomId', db.createReservation)
+// app.put('/reservations/:id', db.updateUser)
 // app.delete('/users/:id', db.deleteUser)
 
 app.listen(port, () => {

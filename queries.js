@@ -17,7 +17,6 @@ const getUsers = (request, response) => {
 
 const getUserById = (request, response) => {
   const id = parseInt(request.params.id)
-
   pool.query('SELECT * FROM users WHERE user_id = $1', [id], (error, results) => {
     if (error) {
       throw error
@@ -37,8 +36,29 @@ const createUser = (request, response) => {
   })
 }
 
-const getRooms = (request, response) => {
-  pool.query('SELECT * FROM users ORDER BY room_id ASC', (error, results) => {
+const getAvailableRooms = (request, response) => {
+  const capacity = parseInt(request.params.capacity)
+
+  pool.query(`SELECT * FROM rooms WHERE capacity > ${capacity}`, (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+const getAllRooms = (request, response) => {
+  pool.query('SELECT * FROM rooms ORDER BY room_id ASC', (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
+const getRoomById = (request, response) => {
+  const id = parseInt(request.params.id)
+  pool.query('SELECT * FROM rooms WHERE room_id = $1', [id], (error, results) => {
     if (error) {
       throw error
     }
@@ -58,7 +78,7 @@ const createRoom = (request, response) => {
 }
 
 const getReservations = (request, response) => {
-  pool.query('SELECT * FROM users ORDER BY reservation_id ASC', (error, results) => {
+  pool.query('SELECT * FROM reservations ORDER BY reservation_id ASC', (error, results) => {
     if (error) {
       throw error
     }
@@ -66,10 +86,19 @@ const getReservations = (request, response) => {
   })
 }
 
-//this is for test purposes to create fake rooms
+const getReservationById = (request, response) => {
+  const id = parseInt(request.params.id)
+  pool.query('SELECT * FROM reservations WHERE reservation_id = $1', [id], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
 const createReservation = (request, response) => {
   const { room_id, user_id, start_time, end_time, purpose, number_of_people, created_at, is_deleted } = request.body
-  pool.query('INSERT INTO rooms (room_id, user_id, start_time, end_time, purpose, number_of_people, created_at, is_deleted) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [ room_id, user_id, start_time, end_time, purpose, number_of_people, created_at, is_deleted ], (error, results) => {
+  pool.query('INSERT INTO reservations (room_id, user_id, start_time, end_time, purpose, number_of_people, created_at, is_deleted) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [ room_id, user_id, start_time, end_time, purpose, number_of_people, created_at, is_deleted ], (error, results) => {
     if (error) {
       throw error
     }
@@ -81,8 +110,11 @@ module.exports = {
   getUsers,
   getUserById,
   createUser,
-  getRooms,
+  getAvailableRooms,
+  getAllRooms,
+  getRoomById,
   createRoom,
   getReservations,
+  getReservationById,
   createReservation,
 }

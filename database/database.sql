@@ -47,9 +47,9 @@ CREATE TABLE users	(
 CREATE TABLE rooms (
 	room_id INT DEFAULT pseudo_encrypt(nextval('seq')::INT) UNIQUE PRIMARY KEY NOT NULL,
 	floor INT,
-	room_number INT,
+	room_number VARCHAR(20) NOT NULL,
 	capacity INT NOT NULL,
-	description TEXT,
+	description VARCHAR(50),
 	reservation_lock BOOL NOT NULL
 );
 
@@ -58,27 +58,21 @@ CREATE TABLE reservations	(
 	reservation_id INT DEFAULT pseudo_encrypt(nextval('seq')::INT) UNIQUE PRIMARY KEY NOT NULL,
 	room_id INT REFERENCES rooms (room_id),
 	user_id INT REFERENCES users (user_id),
-	start_time TIMESTAMP without time zone NOT NULL,
-	end_time TIMESTAMP without time zone NOT NULL,
+	start_time TIMESTAMP NOT NULL,
+	end_time TIMESTAMP NOT NULL,
 	purpose VARCHAR(100) NOT NULL,
 	number_of_people INT NOT NULL,
 	created_at TIMESTAMP without time zone DEFAULT now() NOT NULL,
 	is_deleted BOOL NOT NULL
 );
 
-CREATE TABLE reservation_attendees	(
-	reservation_id INT PRIMARY KEY REFERENCES reservations (reservation_id),
-	user_id INT REFERENCES users (user_id)
-);
 
 
 
 -- SELECT * FROM users;
 -- SELECT * FROM rooms;
 -- SELECT * FROM reservations;
--- SELECT * FROM reservation_attendees;
 
--- DROP TABLE reservation_attendees;
 -- DROP TABLE reservations;
 -- DROP TABLE rooms;
 -- DROP TABLE users;
