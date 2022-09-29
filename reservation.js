@@ -178,11 +178,10 @@ nextButton.addEventListener("click", (e) => {
         // fetch room id and user id
         // add reservation to database
         const createdAt = new Date().toISOString();
-        console.log(createdAt);
         const isDeleted = false;
         const purpose = ""; // may add purpose section later
 
-        const [month, day, year] = dateStart.value.split('-');
+        const [year, month, day] = dateStart.value.split('-');
         const [hour, minute] = timeStart.value.split(':');
         var startTimeDate = new Date(+year, +month - 1, +day, +hour, +minute, +"00");
         const startTime = startTimeDate.toISOString();
@@ -191,24 +190,29 @@ nextButton.addEventListener("click", (e) => {
         //remove after fetching
         const roomId = 1750691250;
         const userId = 483424269;
-
-        const xhr = new XMLHttpRequest()
-        xhr.open('POST', `http://localhost:3000/reservations/${userId}/${roomId}`)
+        console.log(year, month, day)
+        console.log(hour, minute)
+        console.log(startTimeDate, endTimeDate)
         console.log(startTime, endTime)
-        const rsObj = new ReservationDetails(roomId, userId, startTime, endTime, purpose, studentCount, createdAt, isDeleted);
-        console.log(rsObj);
 
-        // Set the Content-Type 
-        xhr.setRequestHeader('Content-Type', 'application/json')
-        xhr.responseType = 'json'
-        xhr.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                console.log(this.response)
-            }
-        }
-        // JSON encoding 
-        const jsonStr = JSON.stringify(rsObj)
-        xhr.send(jsonStr)
+        // const xhr = new XMLHttpRequest()
+        // xhr.open('POST', `http://localhost:3000/reservations/${userId}/${roomId}`)
+        // console.log(startTime, endTime)
+        // const rsObj = new ReservationDetails(roomId, userId, startTime, endTime, purpose, parseInt(studentCount.value), createdAt, isDeleted);
+        // console.log(rsObj);
+
+        // // Set the Content-Type 
+        // xhr.setRequestHeader('Content-Type', 'application/json')
+        // xhr.responseType = 'json'
+        // xhr.onreadystatechange = function() {
+        //     if (this.readyState == 4 && this.status == 200) {
+        //         console.log(this.response)
+        //     }
+        // }
+        // // JSON encoding 
+        // const jsonStr = JSON.stringify(rsObj)
+        // console.log(jsonStr)
+        // xhr.send(jsonStr)
 
         var parts = dateStart.value.split('-');
         var mydate = new Date(parts[0], parts[1] - 1, parts[2]);
@@ -227,12 +231,12 @@ nextButton.addEventListener("click", (e) => {
 })
 
 function ReservationDetails(roomId, userId, startTime, endTime, purpose, numberOfPeople, createdAt, isDeleted) {
-	this.roomId = roomId
-    this.userId = userId
-    this.startTime = startTime
-    this.endTime = endTime
+	this.room_id = roomId
+    this.user_id = userId
+    this.start_time = startTime
+    this.end_time = endTime
     this.purpose = purpose
-    this.numberOfPeople = numberOfPeople
-    this.createdAt = createdAt
-    this.isDeleted = isDeleted
+    this.number_of_people = numberOfPeople
+    this.created_at = createdAt
+    this.is_deleted = isDeleted
 }
