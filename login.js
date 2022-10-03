@@ -25,7 +25,7 @@ loginButton.addEventListener("click", (e) => {
     // location.href='reservation.html';
     
     //or
-    // location.href='cancel.html';
+    // location.href='userPage.html';
 
 })
 

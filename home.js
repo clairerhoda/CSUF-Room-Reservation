@@ -1,6 +1,6 @@
 
 const createButton = document.getElementById("button-start");
-const cancelButton = document.getElementById("cancel-btn");
+const configButton = document.getElementById("config-btn");
 
 createButton.addEventListener("click", (e) => {
     e.preventDefault();
@@ -10,7 +10,7 @@ createButton.addEventListener("click", (e) => {
     
 })
 
-cancelButton.addEventListener("click", (e) => {
+configButton.addEventListener("click", (e) => {
     e.preventDefault();
 
     location.reload();
