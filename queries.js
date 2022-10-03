@@ -77,8 +77,9 @@ const createRoom = (request, response) => {
   })
 }
 
-const getReservations = (request, response) => {
-  pool.query('SELECT * FROM reservations ORDER BY reservation_id ASC', (error, results) => {
+const getReservationsByUser = (request, response) => {
+  const userId = parseInt(request.params.userId)
+  pool.query('SELECT * FROM reservations WHERE user_id = $1 ORDER BY start_time ASC', [userId], (error, results) => {
     if (error) {
       throw error
     }
@@ -114,7 +115,7 @@ module.exports = {
   getAllRooms,
   getRoomById,
   createRoom,
-  getReservations,
+  getReservationsByUser,
   getReservationById,
   createReservation,
 }

@@ -12,27 +12,37 @@
     width: 100%;
 }
 
-#reservation-list {
+#current-reservation-list {
     display: flex;
-    margin-top: 100px;
     flex-direction: column;
     width: 100%;
     align-items: center;
 }
 
-#reservation-title {
+#past-reservation-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}
+
+.reservation-title {
     display: flex;
     font-size: 20px;
     font-weight: 900;
-    margin-bottom: 30px;
+    align-self: center;
+    margin-top: 100px;
+    margin-bottom: 40px;
 }
 
-#reservation {
+.reservation {
     display: flex;
+    max-width: 1000px;
     width: 70%;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 3% 10px 3%;
+    padding: 10px 30px 10px 30px;
+    height: 45px;
 }
 
 #remove-btn {
@@ -45,11 +55,11 @@
     padding: 10px 0 10px 0;
 }
 
-#reservation:nth-child(even){
+.reservation:nth-child(even){
     background-color: rgb(218, 226, 233);
 }
 
-#reservation:nth-child(odd){
+.reservation:nth-child(odd){
     background-color: rgb(187, 198, 211);
 }
 
