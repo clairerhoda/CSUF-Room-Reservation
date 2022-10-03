@@ -29,7 +29,7 @@ app.post('/rooms', db.createRoom)
 app.get('/reservations/:userId', db.getReservationsByUser)
 app.get('/reservations/:id', db.getReservationById)
 app.post('/reservations/', db.createReservation)
-// app.put('/reservations/:id', db.updateUser)
+app.put('/reservations/:id', db.updateReservation)
 // app.delete('/users/:id', db.deleteUser)
 
 app.listen(port, () => {

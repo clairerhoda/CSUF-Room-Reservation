@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSUF Room Reservation</title>
     <link rel="stylesheet" href="home.css">
-    <link rel="stylesheet" href="cancel.css">
+    <link rel="stylesheet" href="userPage.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,6 +14,15 @@
     <link rel="icon" href="images/csuf-logo2.png">
 </head>
 <body>
+    <div id="warning">
+        <div id="warning-contents">
+            <div id="warning-text">Are you sure you want to cancel <br> this room reservation?</div>
+            <div id="btn-row">
+                <div onClick=" document.querySelector('#warning').style.display = 'none'" id="no-btn">No</div>
+                
+            </div>
+        </div>
+    </div>
     <a href="https://www.library.fullerton.edu/">
         <div id="return-pollak-lib"> 
             <div style="padding-left: 5px; font-size: 18px;"> &#8249;&nbsp;&nbsp;</div> 
@@ -28,18 +37,21 @@
     </div>
     <div id="contents">
         <div id="no-reservations">You have no reservations at this time.</div>
-        <div class="reservation-title">Your Room Reservations</div>
-
+        <div class="reservation-title">Upcoming Reservations</div>
+        <div id="upcoming-none-message">You have no upcoming reservations. </div>
         <div id="current-reservation-list">
         </div>
-        <div class="reservation-title">Your Past Room Reservations</div>
+        <div class="reservation-title">Past Reservations</div>
+        <div id="past-none-message">You have no past reservations. </div>
+
         <div id="past-reservation-list">
         </div>
     </div>
+
     <div id="footer">
         <img id="csuf-logo" src="images/csuf-logo.png" alt="CSUF School Logo">
         <div>
-            <div >CSUF Room Reservation Services</div>
+            <div>CSUF Room Reservation Services</div>
             <div style="font-size: 16px;">
                 <div id="split"></div><i style="font-size:15px; padding-right: 8px" class="fa">&#xf095;</i>(657) 278-2721
                 <div style="padding-top: 5px; color:rgb(172, 172, 253);">libcirc@fullerton.edu</div>
@@ -47,7 +59,7 @@
         </div>
     </div>
     
-    <script type="module" src="./cancel.js" charset="utf-8"></script>
+    <script type="module" src="./userPage.js" charset="utf-8"></script>
     
 </body>
 </html>
