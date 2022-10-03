@@ -40,6 +40,24 @@ function timeConvert(n) {
     return hText + mText;
 }
 
+// function for converting local date to Isostring
+function toIsoString(date) {
+    var tzo = -date.getTimezoneOffset(),
+        dif = tzo >= 0 ? '+' : '-',
+        pad = function(num) {
+            return (num < 10 ? '0' : '') + num;
+        };
+    
+    return date.getFullYear() +
+        '-' + pad(date.getMonth() + 1) +
+        '-' + pad(date.getDate()) +
+        'T' + pad(date.getHours()) +
+        ':' + pad(date.getMinutes()) +
+        ':' + pad(date.getSeconds()) +
+        dif + pad(Math.floor(Math.abs(tzo) / 60)) +
+        ':' + pad(Math.abs(tzo) % 60);
+}
+
 backButton.addEventListener("click", (e) => {
     e.preventDefault();
     pageNumber--;
@@ -90,10 +108,9 @@ nextButton.addEventListener("click", (e) => {
         dateStart.style.display = "flex";
 
         var currentDate = new Date();
-        var before1Daydate=new Date(currentDate.setDate(currentDate.getDate() - 1));
-        dateStart.setAttribute("min", before1Daydate.toISOString().split("T")[0]);
+        dateStart.setAttribute("min", toIsoString(currentDate).split("T")[0]);
         var twoWeekLimit=new Date(currentDate.setDate(currentDate.getDate() + 14));
-        dateStart.setAttribute("max", twoWeekLimit.toISOString().split("T")[0]);   
+        dateStart.setAttribute("max", toIsoString(twoWeekLimit).split("T")[0]);   
         
         // TODO: if the min 30 minutes is not available on a date, make the day not selectable
         // this means all available reservations are taken for that day
@@ -175,44 +192,35 @@ nextButton.addEventListener("click", (e) => {
     if (pageNumber == 6) {
         backButton.style.display = "none";
 
-        // fetch room id and user id
-        // add reservation to database
-        const createdAt = new Date().toISOString();
+        const createdAt = toIsoString(new Date());
         const isDeleted = false;
         const purpose = ""; // may add purpose section later
 
         const [year, month, day] = dateStart.value.split('-');
         const [hour, minute] = timeStart.value.split(':');
         var startTimeDate = new Date(+year, +month - 1, +day, +hour, +minute, +"00");
-        const startTime = startTimeDate.toISOString();
+        const startTime = toIsoString(startTimeDate);
         var endTimeDate  = new Date(startTimeDate.getTime() + parseInt(halfHourIncrements.value)*60000);
-        const endTime = endTimeDate.toISOString();
+        const endTime = toIsoString(endTimeDate);
         //remove after fetching
         const roomId = 1750691250;
         const userId = 483424269;
-        console.log(year, month, day)
-        console.log(hour, minute)
-        console.log(startTimeDate, endTimeDate)
-        console.log(startTime, endTime)
 
-        // const xhr = new XMLHttpRequest()
-        // xhr.open('POST', `http://localhost:3000/reservations/${userId}/${roomId}`)
-        // console.log(startTime, endTime)
-        // const rsObj = new ReservationDetails(roomId, userId, startTime, endTime, purpose, parseInt(studentCount.value), createdAt, isDeleted);
-        // console.log(rsObj);
+        const xhr = new XMLHttpRequest()
+        xhr.open('POST', `http://localhost:3000/reservations`)
+        const rsObj = new ReservationDetails(roomId, userId, startTime, endTime, purpose, parseInt(studentCount.value), createdAt, isDeleted);
 
-        // // Set the Content-Type 
-        // xhr.setRequestHeader('Content-Type', 'application/json')
-        // xhr.responseType = 'json'
-        // xhr.onreadystatechange = function() {
-        //     if (this.readyState == 4 && this.status == 200) {
-        //         console.log(this.response)
-        //     }
-        // }
-        // // JSON encoding 
-        // const jsonStr = JSON.stringify(rsObj)
-        // console.log(jsonStr)
-        // xhr.send(jsonStr)
+        // Set the Content-Type 
+        xhr.setRequestHeader('Content-Type', 'application/json')
+        xhr.responseType = 'json'
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log(this.response)
+            }
+        }
+        // JSON encoding 
+        const jsonStr = JSON.stringify(rsObj)
+        xhr.send(jsonStr)
 
         var parts = dateStart.value.split('-');
         var mydate = new Date(parts[0], parts[1] - 1, parts[2]);
