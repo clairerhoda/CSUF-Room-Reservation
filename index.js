@@ -27,10 +27,9 @@ app.get('/rooms/:capacity', db.getAvailableRooms)
 app.get('/rooms/:id', db.getRoomById)
 app.post('/rooms', db.createRoom)
 app.get('/reservations/:userId', db.getReservationsByUser)
-app.get('/reservations/:id', db.getReservationById)
 app.post('/reservations/', db.createReservation)
 app.put('/reservations/:id', db.updateReservation)
-// app.delete('/users/:id', db.deleteUser)
+app.get('/reservations/:startRange/:endRange/:reservationTime', db.checkReservationAvailability)
 
 app.listen(port, () => {
   console.log(`App running on port ${port}.`)
