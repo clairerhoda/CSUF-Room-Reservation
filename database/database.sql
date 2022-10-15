@@ -49,8 +49,7 @@ CREATE TABLE rooms (
 	floor INT,
 	room_number VARCHAR(20) NOT NULL,
 	capacity INT NOT NULL,
-	description VARCHAR(50),
-	reservation_lock BOOL NOT NULL
+	description VARCHAR(50)
 );
 
 
@@ -62,7 +61,7 @@ CREATE TABLE reservations	(
 	end_time TIMESTAMP NOT NULL,
 	purpose VARCHAR(100) NOT NULL,
 	number_of_people INT NOT NULL,
-	created_at TIMESTAMP without time zone DEFAULT now() NOT NULL,
+	created_at TIMESTAMP DEFAULT now() NOT NULL,
 	is_deleted BOOL NOT NULL
 );
 

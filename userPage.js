@@ -53,7 +53,6 @@ xhr.onreadystatechange = function() {
             reservationTimeSlot.appendChild(endTime);
             dateTimeRow.appendChild(reservationTimeSlot)
             
-            
             const reservationDate = document.createElement('div');
             reservationDate.setAttribute('class', 'reservation-date');
             reservationDate.setAttribute('style', 'font-weight: 900');
@@ -96,7 +95,6 @@ xhr.onreadystatechange = function() {
                             xhr.onreadystatechange = function() {
                                 if (this.readyState == 4 && this.status == 200) {
                                     console.log(this.response)
-                                    
                                 }
                             }
                             xhr.send(jsonStr)

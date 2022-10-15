@@ -12,15 +12,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 500px;
+    padding: 150px 0 150px 0;
 }
 
 #form {
     display: flex;
     flex-direction: column;
     background-color: #e9f0f7;
-    height: 300px;
-    width: 500px;
+    height: auto;
+    width: 90%;
+    max-width: 740px;
+    padding: 0 0 50px 0;
 }
 
 #form-selection {
@@ -28,14 +30,15 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 160px;
 }
 
 #selection-description {
-    width: 300px;
+    width: 80%;
     margin-top: 55px;
     text-align: center;
     padding-bottom: 10px;
+    font-weight: 700;
+    font-size: 18px;
 }
 
 #next-btn {
@@ -122,15 +125,54 @@
     background-repeat: no-repeat;
 }
 
+#calendar-list {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+
+}
+
+#calendar-option {
+    display: flex;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 14px;
+    width: 70px;
+    height: 110px;
+    padding: 0 20px 0 20px;
+    margin: 8px;
+    align-items: center;
+    justify-content: center;
+    transform: scale(1);
+    transition: transform 0.25s;
+}
+
+#calendar-option:hover {
+    transform: scale(1.05);
+    transition: transform 0.s;
+}
+
+#calendar-option:nth-child(even){
+    background-color: rgb(239, 226, 213);
+    box-shadow: inset 0px 0px 0px 2px rgb(221, 202, 184);
+}
+
+#calendar-option:nth-child(odd){
+    background-color: rgb(214, 229, 241);
+    box-shadow: inset 0px 0px 0px 2px rgb(175, 193, 208);
+}
+
 #date-start {
     display: none;
     /* styling */
-    background-color: white;
     border: none;
     border-radius: 4px;
     font: inherit;
     line-height: 1.5em;
-    padding: 3px 20px 3px 20px;
+    justify-content: center;
+    max-width: 630px;
 }
 
 #half-hour-increm {

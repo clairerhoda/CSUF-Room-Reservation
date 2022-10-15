@@ -87,16 +87,6 @@ const getReservationsByUser = (request, response) => {
   })
 }
 
-const getReservationById = (request, response) => {
-  const id = parseInt(request.params.id);
-  pool.query('SELECT * FROM reservations WHERE reservation_id = $1', [id], (error, results) => {
-    if (error) {
-      throw error
-    }
-    response.status(200).json(results.rows)
-  })
-}
-
 const createReservation = (request, response) => {
   const { room_id, user_id, start_time, end_time, purpose, number_of_people, created_at, is_deleted } = request.body
   pool.query('INSERT INTO reservations (room_id, user_id, start_time, end_time, purpose, number_of_people, created_at, is_deleted) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [ room_id, user_id, start_time, end_time, purpose, number_of_people, created_at, is_deleted ], (error, results) => {
@@ -107,6 +97,7 @@ const createReservation = (request, response) => {
   })
 }
 
+// "deletes" reservation
 const updateReservation = (request, response) => {
   const id = parseInt(request.params.id);
   pool.query('UPDATE reservations SET is_deleted = true WHERE reservation_id = $1', [id], (error, results) => {
@@ -114,6 +105,33 @@ const updateReservation = (request, response) => {
       throw error
     }
     response.status(201).send(`Reservation updated`);
+  })
+}
+
+const checkReservationAvailability = (request, response) => {
+  const startRange = request.params.startRange;
+  const endRange = request.params.endRange;
+  const reservationTime = request.params.reservationTime;
+  pool.query(
+    `SELECT available_time FROM 
+    (
+      SELECT start_time, end_time from reservations r 
+      WHERE r.start_time >= timezone('utc', now())
+      AND r.end_time < timezone('utc', now()) + interval '1 day' 
+      GROUP BY start_time, end_time
+    ) rsv
+        RIGHT OUTER JOIN 
+    (
+      SELECT generate_series($1::TIMESTAMP, 
+        $2::TIMESTAMP,  
+        CONCAT($3::INT, ' minutes')::interval) AS available_time
+    ) series
+    ON series.available_time BETWEEN rsv.start_time AND rsv.end_time
+    WHERE rsv.start_time IS NULL AND rsv.end_time IS NULL`, [startRange, endRange, reservationTime], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
   })
 }
 
@@ -126,7 +144,7 @@ module.exports = {
   getRoomById,
   createRoom,
   getReservationsByUser,
-  getReservationById,
   createReservation,
   updateReservation,
+  checkReservationAvailability,
 }
