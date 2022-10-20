@@ -12,6 +12,16 @@ loginButton.addEventListener("click", (e) => {
     e.preventDefault();
     var username = document.getElementById("username-input").value;
     var password = document.getElementById("password-input").value;
+    if(username && password){
+        pool.query('SELECT * FROM users WHERE email = $1 AND password_hash = $2', 
+        [username, password], (error, results) => {
+            if (error) {
+              throw error
+            }
+            if(results){
+                this.response.redirect('/reservation')
+            }
+        })}
     console.log(username, password);
     xhr.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
