@@ -124,10 +124,12 @@ const checkReservationAvailability = (request, response) => {
     (
       SELECT generate_series($1::TIMESTAMP, 
         $2::TIMESTAMP,  
-        CONCAT($3::INT, ' minutes')::interval) AS available_time
+        '30 minutes'::interval) AS available_time
     ) series
     ON series.available_time BETWEEN rsv.start_time AND rsv.end_time
-    WHERE rsv.start_time IS NULL AND rsv.end_time IS NULL`, [startRange, endRange, reservationTime], (error, results) => {
+    WHERE rsv.start_time IS NULL AND rsv.end_time IS NULL
+    AND series.available_time + CONCAT($3::INT, ' minutes')::interval <= $2::TIMESTAMP`,
+    [startRange, endRange, reservationTime], (error, results) => {
     if (error) {
       throw error
     }
