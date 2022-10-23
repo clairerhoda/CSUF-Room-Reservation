@@ -89,6 +89,15 @@ body {
     transition: background-color ease-in-out 0.1s;
 }
 
+#invalid-creds {
+    display: flex;
+    color: red;
+    text-align: center;
+    padding: 7px 0 7px 0;
+    font-size: 15px;
+    align-self: flex-start;
+}
+
 #login-btn:hover{
     background-color: #1b4876;
     transition: background-color ease-in-out 0.1s;

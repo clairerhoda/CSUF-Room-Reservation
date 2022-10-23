@@ -25,6 +25,17 @@ const getUserById = (request, response) => {
   })
 }
 
+const getCreds = (request, response) => {
+  const email= request.params.email;
+  const password = request.params.password_hash;
+  pool.query('select * from users where email=$1 AND password_hash=$2', [email, password], (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+}
+
 //this is for test purposes to create fake users
 const createUser = (request, response) => {
   const { email, password_hash, phone, first_name, last_name, is_deleted } = request.body;
@@ -138,6 +149,7 @@ const checkReservationAvailability = (request, response) => {
 module.exports = {
   getUsers,
   getUserById,
+  getCreds,
   createUser,
   getAvailableRooms,
   getAllRooms,
