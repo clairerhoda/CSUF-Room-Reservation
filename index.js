@@ -21,6 +21,7 @@ app.get('/', (request, response) => {
 
 app.get('/users', db.getUsers)
 app.get('/users/:id', db.getUserById)
+app.get('/users/:email/:password_hash', db.getCreds)
 app.post('/users', db.createUser)
 app.get('/rooms', db.getAllRooms)
 app.get('/rooms/:capacity', db.getAvailableRooms)
