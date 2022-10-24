@@ -47,7 +47,8 @@ xhr.onreadystatechange = function() {
             reservationDate.setAttribute('style', 'font-weight: 900');
 
             var dateConversion = new Date(s.start_time).toLocaleDateString("en-US", dateConversionParts);
-            reservationDate.textContent = "Reservation Date: " + dateConversion;
+            // TODO: convert room id to the room number
+            reservationDate.textContent = "Scheduled For: " + dateConversion + " in room " + s.room_id;
             dateTimeRow.appendChild(reservationDate)
 
             reservation.appendChild(dateTimeRow);
@@ -62,37 +63,36 @@ xhr.onreadystatechange = function() {
 
                     reservation.appendChild(removeBtn);
                     removeBtn.addEventListener("click", (e) => {
-                        e.preventDefault();
-                
-                        //display pop up warning for final remove decision
+                        e.preventDefault();        
                         document.getElementById("warning").style.display = "flex";
-                        const yesBtn = document.createElement('div');
-                        yesBtn.setAttribute('id', 'yes-btn');
-                        yesBtn.textContent = "Yes";
+                        document.body.classList.add("stop-scrolling");
 
-                        document.getElementById("btn-row").appendChild(yesBtn);
+                        document.querySelector("body").setAttribute('class', 'stop-scrolling');
+                        window.scrollTo(0, 0);
 
-                        yesBtn.addEventListener("click", (e) => {
-                            xhr.open('PUT', `http://localhost:3000/reservations/${s.reservation_id}`)
-
-                            const newValues = {is_deleted : true}
-        
-                            // JSON encoding 
-                            const jsonStr = JSON.stringify(newValues)
-                            xhr.setRequestHeader('Content-Type', 'application/json')
-                            xhr.responseType = 'json'
-                            xhr.onreadystatechange = function() {
-                                if (this.readyState == 4 && this.status == 200) {
-                                    console.log(this.response)
+                        if (document.querySelectorAll("#yes-btn").length == 0) {
+                            const yesBtn = document.createElement('div');
+                            yesBtn.setAttribute('id', 'yes-btn');
+                            yesBtn.textContent = "Yes";
+    
+                            document.getElementById("btn-row").appendChild(yesBtn);
+                            yesBtn.addEventListener("click", (e) => {
+                                xhr.open('PUT', `http://localhost:3000/reservations/${s.reservation_id}`)
+                                const newValues = {is_deleted : true}
+                                // JSON encoding 
+                                const jsonStr = JSON.stringify(newValues)
+                                xhr.setRequestHeader('Content-Type', 'application/json')
+                                xhr.responseType = 'json'
+                                xhr.onreadystatechange = function() {
+                                    if (this.readyState == 4 && this.status == 200) {
+                                        console.log(this.response)
+                                    }
                                 }
-                            }
-                            xhr.send(jsonStr)
-                            document.querySelector('#warning').style.display = 'none';
-                            location.reload();
-
-                        })
-
-                        //<div id="yes-btn">Yes</div>
+                                xhr.send(jsonStr)
+                                document.querySelector('#warning').style.display = 'none';
+                                location.reload();
+                            })
+                        }
                     })
 
                     currentReservationList.appendChild(reservation);
