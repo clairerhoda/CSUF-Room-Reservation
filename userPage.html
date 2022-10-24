@@ -18,8 +18,7 @@
         <div id="warning-contents">
             <div id="warning-text">Are you sure you want to cancel <br> this room reservation?</div>
             <div id="btn-row">
-                <div onClick=" document.querySelector('#warning').style.display = 'none'" id="no-btn">No</div>
-                
+                <div onClick=" document.querySelector('#warning').style.display = 'none'; document.body.classList.remove('stop-scrolling');" id="no-btn">No</div>
             </div>
         </div>
     </div>
