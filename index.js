@@ -21,6 +21,7 @@ app.get('/', (request, response) => {
 
 app.get('/users', db.getUsers);
 app.get('/users/:id', db.getUserById);
+app.get('/users/:email/:password_hash', db.getCreds)
 app.post('/users', db.createUser);
 app.get('/rooms', db.getAllRooms);
 app.get('/rooms/:capacity', db.getAvailableRooms);
@@ -29,8 +30,7 @@ app.post('/rooms', db.createRoom);
 app.get('/reservations/:userId', db.getReservationsByUser);
 app.post('/reservations/', db.createReservation);
 app.put('/reservations/:id', db.updateReservation);
-app.get('/reservations/:startRange/:endRange/:reservationTime',
- db.checkReservationAvailability);
+app.get('/reservations/:startRange/:endRange/:reservationTime', db.checkReservationAvailability);
 
 app.listen(port, () => {
   console.log(`App running on port ${port}.`);
