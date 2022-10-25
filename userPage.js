@@ -1,21 +1,3 @@
-// function for converting local date to Isostring
-function toIsoString(date) {
-    var tzo = -date.getTimezoneOffset(),
-        dif = tzo >= 0 ? '+' : '-',
-        pad = function(num) {
-            return (num < 10 ? '0' : '') + num;
-        };
-    
-    return date.getFullYear() +
-        '-' + pad(date.getMonth() + 1) +
-        '-' + pad(date.getDate()) +
-        'T' + pad(date.getHours()) +
-        ':' + pad(date.getMinutes()) +
-        ':' + pad(date.getSeconds()) +
-        dif + pad(Math.floor(Math.abs(tzo) / 60)) +
-        ':' + pad(Math.abs(tzo) % 60);
-}
-
 const currentReservationList = document.getElementById("current-reservation-list");
 const pastReservationList = document.getElementById("past-reservation-list");
 var dateConversionParts = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
@@ -24,13 +6,20 @@ const xhr = new XMLHttpRequest();
 xhr.open('GET', `http://localhost:3000/reservations/483424269`);
 xhr.responseType = 'json'
 
+function convertToLocal (dateUTC) {
+    var date = new Date(dateUTC)
+    var newDate = new Date(date.getTime()+
+        date.getTimezoneOffset()*60*1000);
+    var offset = date.getTimezoneOffset() / 60;
+    var hours = date.getHours()
+    return newDate.setHours(hours - offset)
+}
+
 xhr.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-        //enter stuff here
         for (const s of this.response) {
-            var startTime = new Date(s.start_time);
-           
-            var now = new Date()
+            var startTime = new Date(convertToLocal(s.start_time));
+            var endTime = new Date(convertToLocal(s.end_time));
 
             const dateTimeRow = document.createElement('div');
             dateTimeRow.setAttribute('class', 'date-time-row');
@@ -42,15 +31,15 @@ xhr.onreadystatechange = function() {
             reservationTimeSlot.setAttribute('class', 'reservation-time-slot');
             const beginTime = document.createElement('div');
             beginTime.setAttribute('style', 'font-weight: 500');
-            var startTimeConvert = new Date(s.start_time).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
+            var startTimeConvert = startTime.toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
             beginTime.textContent = startTimeConvert;
             reservationTimeSlot.appendChild(beginTime);
-            const endTime = document.createElement('div');
-            var endTimeConvert = new Date(s.end_time).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
-            endTime.textContent = endTimeConvert;
-            endTime.setAttribute('style', 'color: rgb(52, 52, 52)');
+            const endTimeDiv = document.createElement('div');
+            var endTimeConvert = endTime.toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
+            endTimeDiv.textContent = endTimeConvert;
+            endTimeDiv.setAttribute('style', 'color: rgb(52, 52, 52)');
 
-            reservationTimeSlot.appendChild(endTime);
+            reservationTimeSlot.appendChild(endTimeDiv);
             dateTimeRow.appendChild(reservationTimeSlot)
             
             const reservationDate = document.createElement('div');
@@ -58,14 +47,15 @@ xhr.onreadystatechange = function() {
             reservationDate.setAttribute('style', 'font-weight: 900');
 
             var dateConversion = new Date(s.start_time).toLocaleDateString("en-US", dateConversionParts);
-            reservationDate.textContent = "Reservation Date: " + dateConversion;
+            // TODO: convert room id to the room number
+            reservationDate.textContent = "Scheduled For: " + dateConversion + " in room " + s.room_id;
             dateTimeRow.appendChild(reservationDate)
 
             reservation.appendChild(dateTimeRow);
 
             // deleted reservations are not shown
             if (s.is_deleted == false) {
-                if (now.getTime() <= startTime.getTime()) {
+                if (new Date().getTime() <= startTime.getTime()) {
                     document.getElementById("upcoming-none-message").style.display = "none";
                     const removeBtn = document.createElement('div');
                     removeBtn.setAttribute('id', 'remove-btn');
@@ -73,37 +63,36 @@ xhr.onreadystatechange = function() {
 
                     reservation.appendChild(removeBtn);
                     removeBtn.addEventListener("click", (e) => {
-                        e.preventDefault();
-                
-                        //display pop up warning for final remove decision
+                        e.preventDefault();        
                         document.getElementById("warning").style.display = "flex";
-                        const yesBtn = document.createElement('div');
-                        yesBtn.setAttribute('id', 'yes-btn');
-                        yesBtn.textContent = "Yes";
+                        document.body.classList.add("stop-scrolling");
 
-                        document.getElementById("btn-row").appendChild(yesBtn);
+                        document.querySelector("body").setAttribute('class', 'stop-scrolling');
+                        window.scrollTo(0, 0);
 
-                        yesBtn.addEventListener("click", (e) => {
-                            xhr.open('PUT', `http://localhost:3000/reservations/${s.reservation_id}`)
-
-                            const newValues = {is_deleted : true}
-        
-                            // JSON encoding 
-                            const jsonStr = JSON.stringify(newValues)
-                            xhr.setRequestHeader('Content-Type', 'application/json')
-                            xhr.responseType = 'json'
-                            xhr.onreadystatechange = function() {
-                                if (this.readyState == 4 && this.status == 200) {
-                                    console.log(this.response)
+                        if (document.querySelectorAll("#yes-btn").length == 0) {
+                            const yesBtn = document.createElement('div');
+                            yesBtn.setAttribute('id', 'yes-btn');
+                            yesBtn.textContent = "Yes";
+    
+                            document.getElementById("btn-row").appendChild(yesBtn);
+                            yesBtn.addEventListener("click", (e) => {
+                                xhr.open('PUT', `http://localhost:3000/reservations/${s.reservation_id}`)
+                                const newValues = {is_deleted : true}
+                                // JSON encoding 
+                                const jsonStr = JSON.stringify(newValues)
+                                xhr.setRequestHeader('Content-Type', 'application/json')
+                                xhr.responseType = 'json'
+                                xhr.onreadystatechange = function() {
+                                    if (this.readyState == 4 && this.status == 200) {
+                                        console.log(this.response)
+                                    }
                                 }
-                            }
-                            xhr.send(jsonStr)
-                            document.querySelector('#warning').style.display = 'none';
-                            location.reload();
-
-                        })
-
-                        //<div id="yes-btn">Yes</div>
+                                xhr.send(jsonStr)
+                                document.querySelector('#warning').style.display = 'none';
+                                location.reload();
+                            })
+                        }
                     })
 
                     currentReservationList.appendChild(reservation);

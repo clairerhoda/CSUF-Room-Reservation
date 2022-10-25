@@ -6,6 +6,7 @@ createButton.addEventListener("click", (e) => {
     e.preventDefault();
     
     location.reload();
+    // test without localhost 
     location.href='login.html';
     
 })
