@@ -52,11 +52,18 @@
                     <option value="14">14</option>
                   </select>
                 <select id="half-hour-increm"></select>
-                <div id="date-start"></div>
-                <div id="invalidInput">
-                    <div id="invalidText">Please select a day</div>
+                    <div id="date-selection-table">
+                        <div id="arrow-row">
+                            <div onclick="plusSlides(-1)" class="arrow">&#x3c;</div>
+                            <div onclick="plusSlides(1)" class="arrow">&#x3e;</div>
+                        </div>
+                        <div id="date-start"></div>
+                    </div>
+
+                    <div id="invalidInput">
+                        <div id="invalidText">Please select a day</div>
+                    </div>
                 </div>
-            </div>
             <div id="next-btn">Next</div>
         </div>
     </div>
