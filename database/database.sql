@@ -35,7 +35,8 @@ $$ LANGUAGE plpgsql strict immutable;
 CREATE SEQUENCE seq maxvalue 2147483647;
 
 CREATE TABLE users	(
-	user_id INT DEFAULT pseudo_encrypt(nextval('seq')::INT) UNIQUE PRIMARY KEY NOT NULL,
+	user_id INT DEFAULT pseudo_encrypt(nextval('seq')::INT) 
+		UNIQUE PRIMARY KEY NOT NULL,
 	email VARCHAR(50) NOT NULL,
 	password_hash VARCHAR(50) NOT NULL,
 	phone VARCHAR(20) NOT NULL,
@@ -45,27 +46,26 @@ CREATE TABLE users	(
 );
 
 CREATE TABLE rooms (
-	room_id INT DEFAULT pseudo_encrypt(nextval('seq')::INT) UNIQUE PRIMARY KEY NOT NULL,
+	room_id INT DEFAULT pseudo_encrypt(nextval('seq')::INT) 
+		UNIQUE PRIMARY KEY NOT NULL,
 	floor INT,
 	room_number VARCHAR(20) NOT NULL,
 	capacity INT NOT NULL,
 	description VARCHAR(50)
 );
 
-
 CREATE TABLE reservations	(
-	reservation_id INT DEFAULT pseudo_encrypt(nextval('seq')::INT) UNIQUE PRIMARY KEY NOT NULL,
+	reservation_id INT DEFAULT pseudo_encrypt(nextval('seq')::INT) 
+		UNIQUE PRIMARY KEY NOT NULL,
 	room_id INT REFERENCES rooms (room_id),
 	user_id INT REFERENCES users (user_id),
-	start_time TIMESTAMP NOT NULL,
-	end_time TIMESTAMP NOT NULL,
+	start_time TIMESTAMP without time zone NOT NULL,
+	end_time TIMESTAMP without time zone NOT NULL,
 	purpose VARCHAR(100) NOT NULL,
 	number_of_people INT NOT NULL,
-	created_at TIMESTAMP DEFAULT now() NOT NULL,
+	created_at TIMESTAMP without time zone DEFAULT now() NOT NULL,
 	is_deleted BOOL NOT NULL
 );
-
-
 
 
 -- SELECT * FROM users;

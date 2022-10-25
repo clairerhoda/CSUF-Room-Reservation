@@ -31,13 +31,15 @@ function timeConvert(n) {
     if (rminutes == 0) {
         mText = "";
     } 
+
     if (rhours == 1) {
         hText = rhours + " hour";
     }
+
     if (rhours == 0) {
         hText = "";
-
     }
+
     return hText + mText;
 }
 
@@ -51,51 +53,48 @@ backButton.addEventListener("click", (e) => {
         studentCount.style.display = "flex";
         halfHourIncrements.style.display = "none";
         document.getElementById("invalidText").style.display = "none";
-
     }
 
     if (pageNumber == 2) {
-        selectionDescription.textContent = "How Long Do You Want to Reserve the Room?";
+        selectionDescription.textContent = 
+            "How Long Do You Want to Reserve the Room?";
         halfHourIncrements.style.display = "flex";
         dateSelectionTable.style.display = "none";
+        document.getElementById("invalidText").style.display = "none";
     }
 
     if (pageNumber == 3) {
         selectionDescription.textContent = "Select a Date";
         dateSelectionTable.style.display = "flex";
-        timeStart.style.display = "none";
         document.getElementById("next-btn").textContent = "Next";
-
     }
-
-
 })
  nextButton.addEventListener("click", (e) => {
     e.preventDefault();
     pageNumber++;
     
-    // chekc if calendar date is selected
-    var divs = document.querySelectorAll("#calendar-option");
+    // check if calendar date is selected
+    var divs = document.querySelectorAll(".time-row");
         [].forEach.call(divs, function(div) {
-            if (div.style.filter == "saturate(350%)") {
+            if (div.style.backgroundColor == "white") {
                 selected = true;
                 reservationDate = div.textContent;
             }
         });
-    // if (selected == false && pageNumber == 4) {
-    //     document.getElementById("invalidText").style.display = "flex";
-    //     pageNumber = 3;
-    // } else {
-    //     document.getElementById("invalidText").style.display = "none";
-    // }
+
+    if (selected == false && pageNumber == 4) {
+        document.getElementById("invalidText").style.display = "flex";
+        pageNumber = 3;
+    } else {
+        document.getElementById("invalidText").style.display = "none";
+    }
 
     if (pageNumber == 2) {
         backButton.style.display = "flex";
-        selectionDescription.textContent = "How Long Do You Want to Reserve the Room?";
-
+        selectionDescription.textContent =
+            "How Long Do You Want to Reserve the Room?";
         document.getElementById("student-amount").style.display = "none";
         halfHourIncrements.style.display = "flex";
-        
         var minutesIncrement = 30;
 
         if (halfHourIncrements.length == 0) {
@@ -106,6 +105,7 @@ backButton.addEventListener("click", (e) => {
                 } else {
                     option.text = minutesIncrement + " min";
                 }
+
                 option.value = minutesIncrement;
                 halfHourIncrements.appendChild(option);
                 minutesIncrement += 30;
@@ -115,26 +115,20 @@ backButton.addEventListener("click", (e) => {
 
     if (pageNumber == 3) {
         selectionDescription.textContent = "Select a Date";
-
         halfHourIncrements.style.display = "none";
         dateSelectionTable.style.display = "flex";
-        getCalendarDates(halfHourIncrements.value);
-        
+        getCalendarDates(halfHourIncrements.value, studentCount.value);
     }
 
     if (pageNumber == 4) {
-        var x  = document.querySelectorAll(".time-row");
-        [].forEach.call(x, function(div) {
-            if (div.style.backgroundColor == "white") {
-                console.log(div)
-                startTime = new Date(parseInt(div.id))
-                endTime = new Date(new Date(parseInt(div.id)).getTime() +
+        var times  = document.querySelectorAll(".time-row");
+        [].forEach.call(times, function(time) {
+            if (time.style.backgroundColor == "white") {
+                startTime = new Date(parseInt(time.id));
+                endTime = new Date(new Date(parseInt(time.id)).getTime() +
                     parseInt(halfHourIncrements.value)*60000);
             }
         });
-
-        console.log(startTime, endTime)
-
 
         dateSelectionTable.style.display = "none";
         var dateFormatted = (new Date(startTime).toLocaleDateString(
@@ -143,26 +137,14 @@ backButton.addEventListener("click", (e) => {
                 day:"numeric", hour: "numeric", minute:"numeric"
             }));
         selectionDescription.textContent = "You want to reserve a room for "
-         + dateFormatted + " for " + timeConvert(halfHourIncrements.value) + "?";
+            + dateFormatted + " for " + 
+            timeConvert(halfHourIncrements.value) + "?";
         document.getElementById("next-btn").textContent = "Confirm";
-    }
-
-    const convertTime12to24 = (time12h) => {
-        const [time, modifier] = time12h.split(' ');
-        let [hours, minutes] = time.split(':');
-      
-        if (hours === '12')
-          hours = '00';
-      
-        if (modifier === 'PM') 
-          hours = parseInt(hours, 10) + 12;
-      
-        return `${hours}:${minutes}`;
     }
 
     if (pageNumber == 5) {
         backButton.style.display = "none";
-        const createdAt = (new Date()).toISOString();
+        const createdAt = new Date();
         const isDeleted = false;
         const purpose = ""; // may add purpose section later
         
@@ -170,23 +152,24 @@ backButton.addEventListener("click", (e) => {
         const roomId = 1750691250;
         const userId = 483424269;
 
-        const xhr = new XMLHttpRequest()
-        xhr.open('POST', `http://localhost:3000/reservations`)
+        // add reservation to database
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', `http://localhost:3000/reservations`);
         
         // store all times in db in UTC
         const rsObj = new ReservationDetails(
-            roomId, userId, startTime.toISOString(), endTime.toISOString(), 
+            roomId, userId, startTime, endTime, 
             purpose, parseInt(studentCount.value), createdAt, isDeleted);
-        xhr.setRequestHeader('Content-Type', 'application/json')
-        xhr.responseType = 'json'
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.responseType = 'json';
         xhr.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                console.log(this.response)
+                console.log(this.response);
             }
         }
         // JSON encoding 
-        const jsonStr = JSON.stringify(rsObj)
-        xhr.send(jsonStr)
+        const jsonStr = JSON.stringify(rsObj);
+        xhr.send(jsonStr);
 
         var dateFormatted = (new Date(startTime).toLocaleDateString(
             'en-us', { 
@@ -194,8 +177,10 @@ backButton.addEventListener("click", (e) => {
                 day:"numeric", hour: "numeric", minute:"numeric"
             }));
         var room = "SAMPLE123"; //connect to db
-        selectionDescription.textContent = "You have successfully reserved a room on " + dateFormatted + " for " + timeConvert(halfHourIncrements.value) + ". \n Your room is located at " + room;
-
+        selectionDescription.textContent = 
+            "You have successfully reserved a room on "
+            + dateFormatted + " for " + timeConvert(halfHourIncrements.value) 
+            + ". \n Your room is located at " + room;
         document.getElementById("next-btn").textContent = "Finish";
     }
    
@@ -206,13 +191,15 @@ backButton.addEventListener("click", (e) => {
 
 })
 
-function ReservationDetails(roomId, userId, startTime, endTime, purpose, numberOfPeople, createdAt, isDeleted) {
-	this.room_id = roomId
-    this.user_id = userId
-    this.start_time = startTime
-    this.end_time = endTime
-    this.purpose = purpose
-    this.number_of_people = numberOfPeople
-    this.created_at = createdAt
-    this.is_deleted = isDeleted
+function ReservationDetails(roomId, userId, startTime, endTime, 
+        purpose, numberOfPeople, createdAt, isDeleted) {
+
+	this.room_id = roomId;
+    this.user_id = userId;
+    this.start_time = startTime;
+    this.end_time = endTime;
+    this.purpose = purpose;
+    this.number_of_people = numberOfPeople;
+    this.created_at = createdAt;
+    this.is_deleted = isDeleted;
 }
