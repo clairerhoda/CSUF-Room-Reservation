@@ -16,6 +16,9 @@ const studentCount = document.getElementById("student-amount");
 var reservationDate;
 const halfHourIncrements = document.getElementById("half-hour-increm");
 const dateStart = document.getElementById("date-start");
+const dateSelectionTable = document.getElementById("date-selection-table");
+var startTime;
+var endTime;
 
 function timeConvert(n) {
     var num = n;
@@ -54,12 +57,12 @@ backButton.addEventListener("click", (e) => {
     if (pageNumber == 2) {
         selectionDescription.textContent = "How Long Do You Want to Reserve the Room?";
         halfHourIncrements.style.display = "flex";
-        dateStart.style.display = "none";
+        dateSelectionTable.style.display = "none";
     }
 
     if (pageNumber == 3) {
         selectionDescription.textContent = "Select a Date";
-        dateStart.style.display = "flex";
+        dateSelectionTable.style.display = "flex";
         timeStart.style.display = "none";
         document.getElementById("next-btn").textContent = "Next";
 
@@ -67,8 +70,7 @@ backButton.addEventListener("click", (e) => {
 
 
 })
-
-nextButton.addEventListener("click", (e) => {
+ nextButton.addEventListener("click", (e) => {
     e.preventDefault();
     pageNumber++;
     
@@ -80,12 +82,12 @@ nextButton.addEventListener("click", (e) => {
                 reservationDate = div.textContent;
             }
         });
-    if (selected == false && pageNumber == 4) {
-        document.getElementById("invalidText").style.display = "flex";
-        pageNumber = 3;
-    } else {
-        document.getElementById("invalidText").style.display = "none";
-    }
+    // if (selected == false && pageNumber == 4) {
+    //     document.getElementById("invalidText").style.display = "flex";
+    //     pageNumber = 3;
+    // } else {
+    //     document.getElementById("invalidText").style.display = "none";
+    // }
 
     if (pageNumber == 2) {
         backButton.style.display = "flex";
@@ -115,49 +117,33 @@ nextButton.addEventListener("click", (e) => {
         selectionDescription.textContent = "Select a Date";
 
         halfHourIncrements.style.display = "none";
-        dateStart.style.display = "flex";
-
-        var calendarList = getCalendarDates(halfHourIncrements.value);
-        // dateStart.appendChild(calendarList)
-
-        // TODO: if the min 30 minutes is not available on a date, make the day not selectable
-        // this means all available reservations are taken for that day
+        dateSelectionTable.style.display = "flex";
+        getCalendarDates(halfHourIncrements.value);
+        
     }
 
-    // if (pageNumber == 4) {
-    //     selectionDescription.textContent = "Select an Available Reservation Start Time";
-
-    //     dateStart.style.display = "none";
-    //     timeStart.style.display = "flex";
-
-    //     // TODO: retreive all possible start times in 30 min increments
-    //     // retreive room id(s) for available room(s)
-    //     // Example: start time can be 9AM or 9:30AM
-    //     // Note: with reserve length in mind, calculate available start times effeciently.
-
-    //     //Pollak Library Hours
-    //     //Monday	7AM–12AM    Tuesday	    7AM–12AM
-    //     //Wednesday	7AM–12AM    Thursday	7AM–12AM
-    //     //Friday	7AM–5PM     Saturday	9AM–5PM
-    //     //Sunday	9AM–5PM
-
-    //     var sampleTimes = ["9:00 AM", "9:30 AM", "12:00 PM", "12:30 PM", "4:00 PM"];
-    //     if (timeStart.length == 0) {
-    //         for (var j = 0; j < sampleTimes.length; j++) {
-    //             var option = document.createElement("option");
-    //             option.value = sampleTimes[j];
-    //             option.text = sampleTimes[j];
-    //             timeStart.appendChild(option);
-    //         }
-    //     }         
-    // }
-
     if (pageNumber == 4) {
-        dateStart.style.display = "none";
-        var dateFormatted = (new Date(reservationDate).toLocaleDateString(
-            'en-us', { weekday:"long", year:"numeric", month:"long", day:"numeric"}));
-        selectionDescription.textContent = "You want to reserve a room for " + dateFormatted +
-         " at " + timeStart + " for " + timeConvert(halfHourIncrements.value) + "?";
+        var x  = document.querySelectorAll(".time-row");
+        [].forEach.call(x, function(div) {
+            if (div.style.backgroundColor == "white") {
+                console.log(div)
+                startTime = new Date(parseInt(div.id))
+                endTime = new Date(new Date(parseInt(div.id)).getTime() +
+                    parseInt(halfHourIncrements.value)*60000);
+            }
+        });
+
+        console.log(startTime, endTime)
+
+
+        dateSelectionTable.style.display = "none";
+        var dateFormatted = (new Date(startTime).toLocaleDateString(
+            'en-us', { 
+                weekday:"long", year:"numeric", month:"long", 
+                day:"numeric", hour: "numeric", minute:"numeric"
+            }));
+        selectionDescription.textContent = "You want to reserve a room for "
+         + dateFormatted + " for " + timeConvert(halfHourIncrements.value) + "?";
         document.getElementById("next-btn").textContent = "Confirm";
     }
 
@@ -179,13 +165,7 @@ nextButton.addEventListener("click", (e) => {
         const createdAt = (new Date()).toISOString();
         const isDeleted = false;
         const purpose = ""; // may add purpose section later
-        var dateFormatted = (new Date(reservationDate).toLocaleDateString(
-            'en-us', { year:"numeric", month:"numeric", day:"numeric"}))
-        const [month, day, year] = dateFormatted.split('/');
-        const [hour, minute] = convertTime12to24(timeStart.value).split(':');
-        var startTimeDate = new Date(+year, +month - 1, +day, +hour, +minute, +"00");
-        var endTimeDate  = new Date(startTimeDate.getTime() + parseInt(halfHourIncrements.value)*60000);
-
+        
         //remove after fetching
         const roomId = 1750691250;
         const userId = 483424269;
@@ -194,9 +174,9 @@ nextButton.addEventListener("click", (e) => {
         xhr.open('POST', `http://localhost:3000/reservations`)
         
         // store all times in db in UTC
-        const rsObj = new ReservationDetails(roomId, userId, startTimeDate, endTimeDate, purpose, parseInt(studentCount.value), createdAt, isDeleted);
-
-        // Set the Content-Type 
+        const rsObj = new ReservationDetails(
+            roomId, userId, startTime.toISOString(), endTime.toISOString(), 
+            purpose, parseInt(studentCount.value), createdAt, isDeleted);
         xhr.setRequestHeader('Content-Type', 'application/json')
         xhr.responseType = 'json'
         xhr.onreadystatechange = function() {
@@ -208,10 +188,13 @@ nextButton.addEventListener("click", (e) => {
         const jsonStr = JSON.stringify(rsObj)
         xhr.send(jsonStr)
 
-        dateFormatted = (new Date(reservationDate).toLocaleDateString(
-            'en-us', { year:"numeric", month:"long", day:"numeric"}))
+        var dateFormatted = (new Date(startTime).toLocaleDateString(
+            'en-us', { 
+                weekday:"long", year:"numeric", month:"long", 
+                day:"numeric", hour: "numeric", minute:"numeric"
+            }));
         var room = "SAMPLE123"; //connect to db
-        selectionDescription.textContent = "You have successfully reserved a room on " + dateFormatted + " at " + timeStart.value + " for " + timeConvert(halfHourIncrements.value) + ". \n Your room is located at " + room;
+        selectionDescription.textContent = "You have successfully reserved a room on " + dateFormatted + " for " + timeConvert(halfHourIncrements.value) + ". \n Your room is located at " + room;
 
         document.getElementById("next-btn").textContent = "Finish";
     }
