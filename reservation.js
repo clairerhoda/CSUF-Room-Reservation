@@ -4,6 +4,21 @@
     It allows the user to select avaialble date and times for a reservation
  */
 
+function getCookie(cname) {
+    let name = cname + "=";
+    let ca = document.cookie.split(';');
+    for(let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
 const nextButton = document.getElementById("next-btn");
 let pageNumber = 1;
 let selected = false;
@@ -83,10 +98,10 @@ backButton.addEventListener("click", (e) => {
         });
 
     if (selected == false && pageNumber == 4) {
-        document.getElementById("invalidText").style.display = "flex";
+        document.getElementById("invalid-text").style.display = "flex";
         pageNumber = 3;
     } else {
-        document.getElementById("invalidText").style.display = "none";
+        document.getElementById("invalid-text").style.display = "none";
     }
 
     if (pageNumber == 2) {
@@ -150,7 +165,6 @@ backButton.addEventListener("click", (e) => {
         
         //remove after fetching
         const roomId = 1750691250;
-        const userId = 483424269;
 
         // add reservation to database
         const xhr = new XMLHttpRequest();
@@ -158,7 +172,7 @@ backButton.addEventListener("click", (e) => {
         
         // store all times in db in UTC
         const rsObj = new ReservationDetails(
-            roomId, userId, startTime, endTime, 
+            roomId, getCookie("user_id"), startTime, endTime, 
             purpose, parseInt(studentCount.value), createdAt, isDeleted);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.responseType = 'json';
@@ -176,7 +190,7 @@ backButton.addEventListener("click", (e) => {
                 weekday:"long", year:"numeric", month:"long", 
                 day:"numeric", hour: "numeric", minute:"numeric"
             }));
-        var room = "SAMPLE123"; //connect to db
+        var room = "SAMPLE123";
         selectionDescription.textContent = 
             "You have successfully reserved a room on "
             + dateFormatted + " for " + timeConvert(halfHourIncrements.value) 

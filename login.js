@@ -2,12 +2,8 @@ const loginButton = document.getElementById("login-btn");
 const xhr = new XMLHttpRequest()
 xhr.responseType = 'json'
 
-xhr.open('GET', 'http://localhost:3000/users/apuentes1@csu.fullerton.edu/foobar')
-xhr.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-        console.log(this.response);
-    }
-}
+const params = new URLSearchParams(window.location.search);
+var path = params.get('path');
 
 loginButton.addEventListener("click", (e) => {
     e.preventDefault();
@@ -18,19 +14,23 @@ loginButton.addEventListener("click", (e) => {
         xhr.open('GET', url);
         xhr.send();
         xhr.onreadystatechange = function() {
-
             if (this.readyState == 4 && this.status == 200) {
-                if(this.response.length>0){
-                    location.href='reservation.html';
+                if(this.response.length > 0){
+                    // check that user is not deleted
+                    if (this.response[0].is_deleted == false) {
+                        // creating cookie to store user_id
+                        const d = new Date();
+                        d.setTime(d.getTime() + (3 * 24 * 60 * 60 * 1000)); // expires after 3 days
+                        let expires = "expires="+d.toUTCString();
+                        document.cookie = "user_id =" + this.response[0].user_id + ";" + expires + ";path=/";
+                        location.href= path + '.html';
+                    }
                 }else {
-                    //location.href = 'login.html';
                     const invalCredsMessage = document.getElementById("invalid-creds");
                     invalCredsMessage.textContent = 'Invalid Username and/or Password'
                 }
 
             }
         }
-
-} 
-
+    } 
 })

@@ -67,7 +67,6 @@ body {
 }
 
 #password-input {
-    margin-bottom: 30px;
     border: none;
     height: 28px;
     padding: 0 20px 0 10px;
@@ -91,11 +90,11 @@ body {
 
 #invalid-creds {
     display: flex;
-    color: red;
+    color: rgb(202, 18, 18);
+    height: 30px;
+    align-items: center;
     text-align: center;
-    padding: 7px 0 7px 0;
     font-size: 15px;
-    align-self: flex-start;
 }
 
 #login-btn:hover{

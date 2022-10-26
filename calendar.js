@@ -60,7 +60,6 @@ async function getReservations(startRange, endRange, reservationTime) {
         xhr.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 for (const s of this.response) {
-                    console.log(s.available_time)
                     times.push(new Date(s.available_time));
                 }
                 resolve(times);
