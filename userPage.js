@@ -3,18 +3,51 @@
     and past reservations.
  */
 
+function getCookie(cname) {
+    let name = cname + "=";
+    let ca = document.cookie.split(';');
+    for(let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+// find room number with id given
+async function getRoom(room_id) {
+    return new Promise(resolve => {
+        var address =`http://localhost:3000/room/${room_id}`;
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', address);
+        xhr.responseType = 'json';
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                resolve(this.response[0].room_number);
+            } else {
+                return "";
+            }
+        }
+        xhr.send();
+    })
+}
+
 const currentReservationList = 
     document.getElementById("current-reservation-list");
 const pastReservationList = 
     document.getElementById("past-reservation-list");
 var dateConversionParts = 
     { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+
 const xhr = new XMLHttpRequest();
-//TODO: fetch userId
-xhr.open('GET', `http://localhost:3000/reservations/483424269`);
+xhr.open('GET', `http://localhost:3000/reservations/${getCookie("user_id")}`);
 xhr.responseType = 'json';
 
-xhr.onreadystatechange = function() {
+xhr.onreadystatechange = async function() {
     if (this.readyState == 4 && this.status == 200) {
         for (const s of this.response) {
             var startTime = new Date(s.start_time);
@@ -49,9 +82,10 @@ xhr.onreadystatechange = function() {
 
             var dateConversion = new Date(
                 s.start_time).toLocaleDateString("en-US", dateConversionParts);
-            // TODO: convert room id to the room number
+
             reservationDate.textContent = 
-                "Scheduled For: " + dateConversion + " in room " + s.room_id;
+                "Scheduled For: " + dateConversion + "\r\n" +
+                "Located in room " + await getRoom(s.room_id);
             dateTimeRow.appendChild(reservationDate)
 
             reservation.appendChild(dateTimeRow);

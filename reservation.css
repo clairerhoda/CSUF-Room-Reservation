@@ -1,6 +1,6 @@
 #go-back {
     position: absolute;
-    width: 90px;
+    width: 200px;
     top: 150px;
     background-color: #c7d6e7;
     padding: 10px;
@@ -84,12 +84,12 @@
     transition: background-color ease-in-out 0.1s;
 }
 
-#invalidInput {
+#invalid-input {
     height: 25px;
     margin-top: 5px;
 }
 
-#invalidText {
+#invalid-text {
     display: none;
     color: rgb(202, 18, 18);
 }

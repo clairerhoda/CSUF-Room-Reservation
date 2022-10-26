@@ -38,22 +38,6 @@ const getCreds = (request, response) => {
   })
 }
 
-//this is for test purposes to create fake users
-const createUser = (request, response) => {
-  const { email, password_hash, phone,
-      first_name, last_name, is_deleted } = request.body;
-  pool.query(
-    'INSERT INTO users (email, password_hash, phone, first_name,' + 
-    'last_name, is_deleted) VALUES ($1, $2, $3, $4, $5, $6)', 
-    [ email, password_hash, phone, first_name, last_name, is_deleted ],
-     (error, results) => {
-    if (error) {
-      throw error;
-    }
-    response.status(201).send(`User added`);
-  })
-}
-
 const getAvailableRooms = (request, response) => {
   const capacity = parseInt(request.params.capacity);
   pool.query(`SELECT * FROM rooms WHERE capacity > ${capacity}`,
@@ -83,21 +67,6 @@ const getRoomById = (request, response) => {
       throw error;
     }
     response.status(200).json(results.rows);
-  })
-}
-
-//this is for test purposes to create fake rooms
-const createRoom = (request, response) => {
-  const { floor, room_number, capacity, 
-    description, reservation_lock } = request.body;
-  pool.query('INSERT INTO rooms (floor, room_number, capacity, '+ 
-  'description, reservation_lock) VALUES ($1, $2, $3, $4, $5)', 
-  [ floor, room_number, capacity, description, reservation_lock ],
-    (error, results) => {
-    if (error) {
-      throw error
-    }
-    response.status(201).send(`Room added`)
   })
 }
 
@@ -174,11 +143,9 @@ module.exports = {
   getUsers,
   getUserById,
   getCreds,
-  createUser,
   getAvailableRooms,
   getAllRooms,
   getRoomById,
-  createRoom,
   getReservationsByUser,
   createReservation,
   updateReservation,

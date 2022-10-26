@@ -22,11 +22,9 @@ app.get('/', (request, response) => {
 app.get('/users', db.getUsers);
 app.get('/users/:id', db.getUserById);
 app.get('/users/:email/:password_hash', db.getCreds)
-app.post('/users', db.createUser);
 app.get('/rooms', db.getAllRooms);
 app.get('/rooms/:capacity', db.getAvailableRooms);
-app.get('/rooms/:id', db.getRoomById);
-app.post('/rooms', db.createRoom);
+app.get('/room/:id', db.getRoomById);
 app.get('/reservations/:userId', db.getReservationsByUser);
 app.post('/reservations/', db.createReservation);
 app.put('/reservations/:id', db.updateReservation);
