@@ -163,38 +163,46 @@ backButton.addEventListener("click", (e) => {
         const isDeleted = false;
         const purpose = ""; // may add purpose section later
         
-        //remove after fetching
-        const roomId = 1750691250;
-
-        // add reservation to database
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', `http://localhost:3000/reservations`);
-        
-        // store all times in db in UTC
-        const rsObj = new ReservationDetails(
-            roomId, getCookie("user_id"), startTime, endTime, 
-            purpose, parseInt(studentCount.value), createdAt, isDeleted);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.responseType = 'json';
-        xhr.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                console.log(this.response);
+        // get next available room id and then post reservation
+        getAvailableRoomID(new Date(startTime).toISOString(),
+             new Date(endTime).toISOString(), parseInt(halfHourIncrements.value),
+                studentCount.value)
+             .then((roomID) => {
+             // add reservation to database
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', `http://localhost:3000/reservations`);
+            
+            // create object to store new reservation
+            const rsObj = new ReservationDetails(
+                roomID, getCookie("user_id"), startTime, endTime, 
+                purpose, parseInt(studentCount.value), createdAt, isDeleted);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.responseType = 'json';
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.response);
+                }
             }
-        }
-        // JSON encoding 
-        const jsonStr = JSON.stringify(rsObj);
-        xhr.send(jsonStr);
+            // JSON encoding 
+            const jsonStr = JSON.stringify(rsObj);
+            xhr.send(jsonStr);
+            var dateFormatted = (new Date(startTime).toLocaleDateString(
+                'en-us', { 
+                    weekday:"long", year:"numeric", month:"long", 
+                    day:"numeric", hour: "numeric", minute:"numeric"
+                }));
+                
+            getRoom(roomID).then((value) => {
+                selectionDescription.textContent = 
+                "You have successfully reserved a room on "
+                + dateFormatted + " for " + timeConvert(halfHourIncrements.value) 
+                + ". \n Your room is located at " + value;
+            });
+        });
+       
 
-        var dateFormatted = (new Date(startTime).toLocaleDateString(
-            'en-us', { 
-                weekday:"long", year:"numeric", month:"long", 
-                day:"numeric", hour: "numeric", minute:"numeric"
-            }));
-        var room = "SAMPLE123";
-        selectionDescription.textContent = 
-            "You have successfully reserved a room on "
-            + dateFormatted + " for " + timeConvert(halfHourIncrements.value) 
-            + ". \n Your room is located at " + room;
+        
+       
         document.getElementById("next-btn").textContent = "Finish";
     }
    
@@ -204,6 +212,38 @@ backButton.addEventListener("click", (e) => {
     }
 
 })
+
+async function getAvailableRoomID(startTime, endTime, time, capacity) {
+    return new Promise(function (resolve, reject) {
+        var address ='http://localhost:3000/room';
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', 
+        `${address}/${startTime}/${endTime}/${time}/${capacity}`);
+        xhr.responseType = 'json';
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                resolve( this.response[0].room_id);
+            } 
+        }
+        xhr.send();
+    })
+}
+
+async function getRoom(roomId) {
+    return new Promise(function (resolve, reject) {
+        var address ='http://localhost:3000/room';
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', 
+        `${address}/${roomId}`);
+        xhr.responseType = 'json';
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                resolve( this.response[0].room_number);
+            } 
+        }
+        xhr.send();
+    })
+}
 
 function ReservationDetails(roomId, userId, startTime, endTime, 
         purpose, numberOfPeople, createdAt, isDeleted) {

@@ -38,17 +38,6 @@ const getCreds = (request, response) => {
   })
 }
 
-const getAvailableRooms = (request, response) => {
-  const capacity = parseInt(request.params.capacity);
-  pool.query(`SELECT * FROM rooms WHERE capacity > ${capacity}`,
-    (error, results) => {
-    if (error) {
-      throw error;
-    }
-    response.status(200).json(results.rows);
-  })
-}
-
 const getAllRooms = (request, response) => {
   pool.query('SELECT * FROM rooms ORDER BY room_id ASC',
     (error, results) => {
@@ -113,25 +102,65 @@ const checkReservationAvailability = (request, response) => {
   const startRange = request.params.startRange;
   const endRange = request.params.endRange;
   const reservationTime = request.params.reservationTime;
+  const capacity = request.params.capacity;
   pool.query(
-    `SELECT available_time FROM 
+    `SELECT available_time, series.room_id FROM 
     (
-      SELECT start_time, end_time from reservations r 
-      WHERE r.start_time >= now()
-      AND r.end_time < now() + interval '1 day' 
-      GROUP BY start_time, end_time
+      SELECT start_time, end_time, room_id, is_deleted from reservations r 
+      WHERE r.start_time >= $1::TIMESTAMP WITH TIME ZONE
+      AND r.end_time <= $2::TIMESTAMP WITH TIME ZONE
+      AND is_deleted = false 
+      GROUP BY start_time, end_time, room_id, is_deleted
     ) rsv
         RIGHT OUTER JOIN 
     (
-      SELECT generate_series($1::TIMESTAMP WITH TIME ZONE, 
+      SELECT * from generate_series($1::TIMESTAMP WITH TIME ZONE, 
       $2::TIMESTAMP WITH TIME ZONE,  
-      '30 minutes'::interval) AS available_time
+      '30 minutes'::interval) available_time,
+      (SELECT room_id FROM ROOMS WHERE capacity >= $4) room_id
     ) series
-    ON series.available_time BETWEEN rsv.start_time AND rsv.end_time
-    WHERE rsv.start_time IS NULL AND rsv.end_time IS NULL
-    AND series.available_time + CONCAT($3::INT, ' minutes')::interval <= $2::TIMESTAMP WITH TIME ZONE
-     `,
-    [startRange, endRange, reservationTime], (error, results) => {
+    ON (series.available_time BETWEEN rsv.start_time AND rsv.end_time - interval '30 minute') 
+    AND series.room_id = rsv.room_id
+    WHERE rsv.start_time IS NULL
+    AND (series.available_time + CONCAT($3::INT, ' minutes')::interval) < 
+    $2::TIMESTAMP WITH TIME ZONE + interval '30 minute' 
+    ORDER BY available_time`,
+    [startRange, endRange, reservationTime, capacity], (error, results) => {
+    if (error) {
+      throw error;
+    }
+    response.status(200).json(results.rows);
+  })
+}
+
+const getNextAvailableRoom = (request, response) => {
+  const startRange = request.params.startRange;
+  const endRange = request.params.endRange;
+  const reservationTime = request.params.reservationTime;
+  const capacity = request.params.capacity;
+  pool.query(
+    `SELECT available_time, series.room_id FROM 
+    (
+      SELECT start_time, end_time, room_id, is_deleted from reservations r 
+      WHERE r.start_time >= $1::TIMESTAMP WITH TIME ZONE
+      AND r.end_time <= $2::TIMESTAMP WITH TIME ZONE
+      AND is_deleted = false
+      GROUP BY start_time, end_time, room_id, is_deleted
+    ) rsv
+        RIGHT OUTER JOIN 
+    (
+      SELECT * from generate_series($1::TIMESTAMP WITH TIME ZONE, 
+        $2::TIMESTAMP WITH TIME ZONE,  
+      '30 minutes'::interval) available_time, 
+      (SELECT room_id FROM ROOMS WHERE capacity >= $4) room_id
+    ) series
+    ON (series.available_time BETWEEN $1::TIMESTAMP WITH TIME ZONE AND $2::TIMESTAMP WITH TIME ZONE ) 
+    AND series.room_id = rsv.room_id
+    WHERE rsv.start_time IS NULL 
+    AND (series.available_time + CONCAT($3::INT, ' minutes')::interval) <=
+    $2::TIMESTAMP WITH TIME ZONE + interval '30 minute' 
+    ORDER BY available_time`,
+  [startRange, endRange, reservationTime, capacity], (error, results) => {
     if (error) {
       throw error;
     }
@@ -143,11 +172,11 @@ module.exports = {
   getUsers,
   getUserById,
   getCreds,
-  getAvailableRooms,
   getAllRooms,
   getRoomById,
   getReservationsByUser,
   createReservation,
   updateReservation,
   checkReservationAvailability,
+  getNextAvailableRoom,
 }
