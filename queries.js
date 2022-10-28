@@ -98,6 +98,24 @@ const updateReservation = (request, response) => {
   })
 }
 
+const oneDayCheck = (request, response) => {
+  const startRange = request.params.startRange;
+  const endRange = request.params.endRange;
+  const userID = request.params.userId;
+  pool.query(
+  `SELECT user_id, start_time, end_time, room_id, is_deleted from reservations r 
+  WHERE r.start_time >= $1::TIMESTAMP WITH TIME ZONE
+  AND r.end_time <= $2::TIMESTAMP WITH TIME ZONE
+  AND user_id = $3
+  AND is_deleted = false `,
+  [startRange, endRange, userID], (error, results) => {
+    if (error) {
+      throw error;
+    }
+    response.status(200).json(results.rows);
+  })
+}
+
 const checkReservationAvailability = (request, response) => {
   const startRange = request.params.startRange;
   const endRange = request.params.endRange;
@@ -174,6 +192,7 @@ module.exports = {
   getCreds,
   getAllRooms,
   getRoomById,
+  oneDayCheck,
   getReservationsByUser,
   createReservation,
   updateReservation,
