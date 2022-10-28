@@ -3,6 +3,21 @@
     date selection for the user from today to 2 weeks in the future.
  */
 
+function getCookie(cname) {
+    let name = cname + "=";
+    let ca = document.cookie.split(';');
+    for(let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
 var slideIndex = 1;
 
 // Next/previous controls
@@ -29,6 +44,22 @@ function showSlides(n) {
 
 var dateDict = new Object();
 var roomDict = new Object();
+
+async function checkDay(start, end, userId) {
+    return new Promise(resolve => {
+        var address ='http://localhost:3000/reservations';
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', 
+        `${address}/${start}/${end}/${userId}`);
+        xhr.responseType = 'json';
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                resolve(this.response)
+            } 
+        }
+        xhr.send();
+    })
+}
 
 async function getReservations(start, end, reservationTime, capacity) {
     return new Promise(resolve => {
@@ -105,6 +136,19 @@ async function getCalendarDates(reservationTime, studentCount) {
             if (new Date().toISOString() > new Date(openTime).toISOString()) {
                 const ms = 1000 * 60 * 30;
                 openTime = new Date(Math.ceil(new Date().getTime() / ms) * ms);
+            }
+
+            // check if user already has a reservation for the given day
+            var dayCheck = await checkDay(new Date(openTime).toISOString(), 
+                new Date(closeTime).toISOString(),
+                getCookie("user_id"));
+            if (dayCheck.length> 0) {
+                availableDateDay = 
+                new Date(availableDateDay)
+                    .setDate(new Date(availableDateDay).getDate() + 1);
+                 availableDateDay = new Date(availableDateDay).toISOString();
+                dayNum++;
+                continue;
             }
 
             // fetch available dates from db

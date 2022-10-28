@@ -200,9 +200,6 @@ backButton.addEventListener("click", (e) => {
             });
         });
        
-
-        
-       
         document.getElementById("next-btn").textContent = "Finish";
     }
    
