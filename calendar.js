@@ -27,42 +27,31 @@ function showSlides(n) {
     slides[slideIndex+3].style.display = "flex";
 }
 
-var availableRooms = [];
-async function getRooms(studentCount) {
-    return new Promise(resolve => {
-        var times = [];
-        var address ='http://localhost:3000/rooms';
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', `${address}/${studentCount}`);
-        xhr.responseType = 'json';
-        xhr.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                for (const s of this.response) {
-                resolve(availableRooms.push(s.room_id));
-                }
-            } 
-        }
-        xhr.send();
-    })
-}
-
 var dateDict = new Object();
+var roomDict = new Object();
 
-async function getReservations(startRange, endRange, reservationTime) {
+async function getReservations(start, end, reservationTime, capacity) {
     return new Promise(resolve => {
-        var times = [];
-
+        var timesAndCount = new Object();
+        var room = 0;
         var address ='http://localhost:3000/reservations';
         const xhr = new XMLHttpRequest();
         xhr.open('GET', 
-        `${address}/${startRange}/${endRange}/${reservationTime}`);
+        `${address}/${start}/${end}/${reservationTime}/${capacity}`);
         xhr.responseType = 'json';
         xhr.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
+                var temp = new Date(this.response[0].available_time)
                 for (const s of this.response) {
-                    times.push(new Date(s.available_time));
+                    if (temp.getTime() === (new Date(s.available_time)).getTime()) {
+                        room += 1
+                    } else {
+                        timesAndCount[temp] = room;
+                        room = 1
+                    }
+                    temp = new Date(s.available_time);
                 }
-                resolve(times);
+                resolve(timesAndCount);
             } 
         }
         xhr.send();
@@ -76,12 +65,7 @@ async function getCalendarDates(reservationTime, studentCount) {
         availableDateDay14.setHours(24,0,0,0);
 
         const dates = [];
-
-        // TODO: if room with same date is available, 
-        // make sure it shows in available reservation table
-        await getRooms(studentCount);
-        // console.log("fffff: ",  availableRooms);
-
+        
         availableDateDay = availableDateDay.toISOString();
         availableDateDay14 = availableDateDay14.toISOString();
         var dayNum = 0;
@@ -127,7 +111,8 @@ async function getCalendarDates(reservationTime, studentCount) {
             var availableTimes = await getReservations(
                 new Date(openTime).toISOString(), 
                 new Date(closeTime).toISOString(), 
-                reservationTime
+                reservationTime,
+                studentCount
             );
 
             // if no times available, do not show date
@@ -140,7 +125,19 @@ async function getCalendarDates(reservationTime, studentCount) {
                 continue;
             }
 
-            dateDict[dayNum] = await availableTimes;
+            // assign available times to an array
+            var times = [];
+            var roomCount = [];
+            for (const key in await availableTimes) {
+                times.push(new Date(key))
+                roomCount.push(availableTimes[key])
+            }
+
+            // set fetch available times to date dictionary
+            dateDict[dayNum] = times;
+            roomDict[dayNum] = roomCount;
+            // date get pushed onto date array if it has
+            // available dates
             dates.push(new Date(availableDateDay));
             availableDateDay = 
                 new Date(availableDateDay)
@@ -170,8 +167,11 @@ async function getCalendarDates(reservationTime, studentCount) {
             calendarOption.appendChild(part2);
             calendarOption.value = i;
             calendarList.appendChild(calendarOption);
-            if ( i == 0) {
-                calendarOption.style.backgroundColor = "rgb(255,255,255)";
+            // pre select first calendar day
+            if (i == 0) {
+                calendarOption.style.backgroundColor = "white";
+                calendarOption.style.boxShadow = 
+                    "0px 0px 0px 2.5px #527496 inset";
             }
         }
         var dateStart = 
@@ -182,38 +182,46 @@ async function getCalendarDates(reservationTime, studentCount) {
         
         var timeSelection = document.createElement("div");
         timeSelection.setAttribute("id", "time-selection");
-        const objEntries = Object.entries(await dateDict);
-        var val = Object.values(dateDict)[0];
-        addTimesForDate(val);
+        var availableTime = Object.values(dateDict)[0];
+        var roomCounter = Object.values(roomDict)[0];
+        
+        addTimesForDate(availableTime, roomCounter);
            
-        async function addTimesForDate(val) {
+        async function addTimesForDate(availableTime, roomAvailable) {
             // remove other times when new date is selected
-            var child = timeSelection.lastElementChild; 
+            var child = timeSelection.lastElementChild;
             while (child) {
                 timeSelection.removeChild(child);
                 child = timeSelection.lastElementChild;
             }
 
             // display available times for date selected
-            for (var prop in await val) {
+            for (var prop in await availableTime) {
                 var timeSlot = document.createElement("div");
                 timeSlot.setAttribute("id", "time-slot");
-                var start = new Date(val[prop]);
-                var end = new Date(new Date(val[prop]).getTime() +
+                var start = new Date(availableTime[prop]);
+                var end = new Date(new Date(availableTime[prop]).getTime() +
                     parseInt(reservationTime)*60000);
                 var meetingStart = start.toLocaleTimeString(
                     'en-us', { hour:"numeric", minute:"numeric"});
                 var meetingEnd = end.toLocaleTimeString(
                     'en-us', { hour:"numeric", minute:"numeric"});
                 timeSlot.textContent = meetingStart + " to " + meetingEnd;
+                var roomsLeft = document.createElement("div");
+                roomsLeft.setAttribute("id", "rooms-left");
+                roomsLeft.textContent = "Rooms Left: " + roomAvailable[prop];
                 var selectTimeBtn = document.createElement("div");
                 selectTimeBtn.setAttribute("id", "select-time-btn");
                 selectTimeBtn.textContent = "Select";
                 timeSlot.appendChild(selectTimeBtn);
+                var rightItems = document.createElement("div");
+                rightItems.setAttribute("class", "right-items");
+                rightItems.appendChild(roomsLeft);
+                rightItems.appendChild(selectTimeBtn);
                 var timeRow = document.createElement("li");
                 timeRow.setAttribute("class", "time-row");
                 timeRow.appendChild(timeSlot);
-                timeRow.appendChild(selectTimeBtn);
+                timeRow.appendChild(rightItems);
                 timeRow.setAttribute("id", start.getTime());
                 timeSelection.appendChild(timeRow);
             }
@@ -224,13 +232,12 @@ async function getCalendarDates(reservationTime, studentCount) {
        
         // detect when reservation time has been selected
         timeSelection.addEventListener("click", (event) => {
-            
             if (event.target.tagName == "LI") {
                 var rows = document.querySelectorAll(".time-row");
                 var status = document.querySelectorAll("#select-time-btn");
                 [].forEach.call(rows, function(div) {
                     div.style.boxShadow = "none";
-                    div.style.backgroundColor = "#e0e5ec";
+                    div.style.backgroundColor = "#cdcfd6";
                 });
                 [].forEach.call(status, function(div) {
                     div.style.width = "100px";
@@ -253,9 +260,12 @@ async function getCalendarDates(reservationTime, studentCount) {
                 var divs = document.querySelectorAll(".calendar-option");
                 [].forEach.call(divs, function(div) {
                     div.style.backgroundColor = "rgba(255, 255, 255, 0)";
+                    div.style.boxShadow = "none";                    
                 });
-                addTimesForDate(dateDict[event.target.value])
+                addTimesForDate(dateDict[event.target.value], roomDict[event.target.value])
                 event.target.style.backgroundColor = "rgb(255, 255, 255)";
+                event.target.style.boxShadow = 
+                    "0px 0px 0px 2.5px #527496 inset";
             }
         })
 
