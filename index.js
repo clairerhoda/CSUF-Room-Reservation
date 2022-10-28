@@ -24,6 +24,7 @@ app.get('/users/:id', db.getUserById);
 app.get('/users/:email/:password_hash', db.getCreds)
 app.get('/rooms', db.getAllRooms);
 app.get('/room/:id', db.getRoomById);
+app.get('/reservations/:startRange/:endRange/:userId', db.oneDayCheck)
 app.get('/reservations/:userId', db.getReservationsByUser);
 app.post('/reservations/', db.createReservation);
 app.put('/reservations/:id', db.updateReservation);
