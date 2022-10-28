@@ -86,7 +86,7 @@ a {
 
 #button-start {
     background-color: rgb(250, 147, 3);
-    padding: 10px 15px 10px 15px;
+    padding: 15px 20px 15px 20px;
     border-radius: 10px;
     color: white;
     margin-bottom: 50px;
@@ -106,7 +106,6 @@ a {
     text-align: center;
     padding: 10px 15px 10px 15px;
     width: 180px;
-    font-size: 15px;
     justify-content: center;
     border-radius: 10px;
     cursor: pointer;
@@ -150,11 +149,11 @@ a {
 }
 
 @media (max-width: 700px) {
-    #intro-1 {width: 300px}
     .intro-2 {width: 80%;}
 }
 
 @media (max-width: 600px) {
     #footer{flex-direction: column; text-align: center; }
     #csuf-logo{padding: 0 0 20px 0;}
+    #intro-1 {padding: 0 20% 0 20%;}
 }
