@@ -9,8 +9,9 @@ a {
 }
 
 #return-pollak-lib {
+    font-weight: 500;
     position: absolute;
-    width: 190px;
+    width: 200px;
     top: 150px;
     background-color: #c7d6e7;
     padding: 10px;
@@ -68,29 +69,56 @@ a {
 }
 
 #study-room-img {
-    width: 900px;
-    margin: 50px 0 50px 0;
+    width: 800px;
+    margin: 50px 0 40px 0;
 }
 
 #intro-1 {
-    font-size: 20px;
-    margin-bottom: 30px;
+    font-size: 30px;
+    margin-bottom: 50px;
     text-align: center;
+    font-weight: 900;
+    color: rgb(70, 70, 70);
+}
+
+#notice-box {
+    background-color: rgb(239, 239, 239);
+    border-radius: 8px;
+    padding: 30px 40px 30px 40px;
+    width: 720px;
+}
+
+#info-notes {
+    font-size: 18px;
+    margin-bottom: 23px;
+    text-align: center;
+    font-weight: 900;
+    display: flex;
+    justify-self: flex-start;
+    color: rgb(70, 70, 70);
 }
 
 .intro-2 {
-    width: 720px;
+    color: rgb(70, 70, 70);
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    text-align: start;
+    font-size: 17px;
 }
 
 #button-start {
-    background-color: rgb(250, 147, 3);
-    padding: 15px 20px 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #0b355f;
+    font-size: 18px;
+    font-weight: 900;
     border-radius: 10px;
     color: white;
-    margin-bottom: 50px;
+    margin: 30px 0 50px 0;
     cursor: pointer;
+    width: 370px;
+    height: 60px;
     transition: background-color ease-in-out 0.1s;
 }
 
@@ -99,18 +127,46 @@ a {
     transition: background-color ease-in-out 0.1s;
 }
 
+#config-box {
+    display: flex;
+    flex-direction: row;
+    border-radius: 8px;
+    width: 720px;
+    margin: 80px 0 100px 0;
+}
+
+#mascot-img {
+    width: 200px;
+    display: flex;
+}
+
+#config-text-box {
+    background-color: rgb(239, 239, 239);
+    border-radius: 8px;
+    padding: 20px 40px 15px 40px;
+    margin-bottom: 20px;
+}
+
+#configure-text {
+    color: rgb(70, 70, 70);
+    text-align: center; 
+    font-size: 17px;
+    margin-bottom: 10px;
+    width: 250px;
+}
+
 #config-btn {
     display: flex;
     color: white;
-    background-color: #0b355f;
+    background-color: #505050;
     text-align: center;
-    padding: 10px 15px 10px 15px;
+    padding: 15px 20px 15px 20px;
     width: 180px;
     justify-content: center;
     border-radius: 10px;
     cursor: pointer;
+    font-weight: 800;
     transition: background-color ease-in-out 0.1s;
-    margin: 10px 0 50px  0;
 }
 
 #config-btn:hover {
@@ -144,12 +200,12 @@ a {
 
 @media (max-width: 890px) {
     #study-room-img{width: 80%;}
-    .intro-2 {width: 580px;}
+    #notice-box {width: 580px;}
    
 }
 
 @media (max-width: 700px) {
-    .intro-2 {width: 80%;}
+    #notice-box {width: 80%;}
 }
 
 @media (max-width: 600px) {

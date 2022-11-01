@@ -20,14 +20,18 @@ loginButton.addEventListener("click", (e) => {
                     if (this.response[0].is_deleted == false) {
                         // creating cookie to store user_id
                         const d = new Date();
-                        d.setTime(d.getTime() + (3 * 24 * 60 * 60 * 1000)); // expires after 3 days
+                        // expires after 3 days
+                        d.setTime(d.getTime() + (3 * 24 * 60 * 60 * 1000)); 
                         let expires = "expires="+d.toUTCString();
-                        document.cookie = "user_id =" + this.response[0].user_id + ";" + expires + ";path=/";
+                        document.cookie = "user_id =" +
+                         this.response[0].user_id + ";" + expires + ";path=/";
                         location.href= path + '.html';
                     }
                 }else {
-                    const invalCredsMessage = document.getElementById("invalid-creds");
-                    invalCredsMessage.textContent = 'Invalid Username and/or Password'
+                    const invalCredsMessage =
+                        document.getElementById("invalid-creds");
+                    invalCredsMessage.textContent =
+                        'Invalid Username and/or Password';
                 }
 
             }
