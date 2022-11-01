@@ -7,15 +7,6 @@ const pool = new Pool({
   port: 5432,
 });
 
-const getUsers = (request, response) => {
-  pool.query('SELECT * FROM users ORDER BY user_id ASC', (error, results) => {
-    if (error) {
-      throw error
-    }
-    response.status(200).json(results.rows)
-  })
-}
-
 const getUserById = (request, response) => {
   const id = parseInt(request.params.id);
   pool.query('SELECT * FROM users WHERE user_id = $1',
@@ -30,21 +21,12 @@ const getUserById = (request, response) => {
 const getCreds = (request, response) => {
   const email= request.params.email;
   const password = request.params.password_hash;
-  pool.query('select * from users where email=$1 AND password_hash=$2', [email, password], (error, results) => {
+  pool.query('select * from users where email=$1 AND password_hash=$2',
+   [email, password], (error, results) => {
     if (error) {
       throw error
     }
     response.status(200).json(results.rows)
-  })
-}
-
-const getAllRooms = (request, response) => {
-  pool.query('SELECT * FROM rooms ORDER BY room_id ASC',
-    (error, results) => {
-    if (error) {
-      throw error;
-    }
-    response.status(200).json(results.rows);
   })
 }
 
@@ -62,7 +44,8 @@ const getRoomById = (request, response) => {
 const getReservationsByUser = (request, response) => {
   const userId = parseInt(request.params.userId);
   pool.query(`SELECT * FROM reservations 
-  WHERE user_id= $1 ORDER BY start_time ASC`, [userId], (error, results) => {
+  WHERE user_id= $1 ORDER BY start_time ASC`, [userId],
+   (error, results) => {
     if (error) {
       throw error;
     }
@@ -103,11 +86,12 @@ const oneDayCheck = (request, response) => {
   const endRange = request.params.endRange;
   const userID = request.params.userId;
   pool.query(
-  `SELECT user_id, start_time, end_time, room_id, is_deleted from reservations r 
-  WHERE r.start_time >= $1::TIMESTAMP WITH TIME ZONE
-  AND r.end_time <= $2::TIMESTAMP WITH TIME ZONE
-  AND user_id = $3
-  AND is_deleted = false `,
+  `SELECT user_id, start_time, end_time, room_id, is_deleted
+   from reservations r 
+    WHERE r.start_time >= $1::TIMESTAMP WITH TIME ZONE
+    AND r.end_time <= $2::TIMESTAMP WITH TIME ZONE
+    AND user_id = $3
+    AND is_deleted = false `,
   [startRange, endRange, userID], (error, results) => {
     if (error) {
       throw error;
@@ -137,13 +121,32 @@ const checkReservationAvailability = (request, response) => {
       '30 minutes'::interval) available_time,
       (SELECT room_id FROM ROOMS WHERE capacity >= $4) room_id
     ) series
-    ON (series.available_time BETWEEN rsv.start_time AND rsv.end_time - interval '30 minute') 
+    ON (series.available_time BETWEEN rsv.start_time 
+    AND rsv.end_time - interval '30 minute') 
     AND series.room_id = rsv.room_id
     WHERE rsv.start_time IS NULL
-    AND (series.available_time + CONCAT($3::INT, ' minutes')::interval) < 
+    AND (series.available_time + CONCAT($3::INT, ' minutes')::interval) <= 
     $2::TIMESTAMP WITH TIME ZONE + interval '30 minute' 
     ORDER BY available_time`,
     [startRange, endRange, reservationTime, capacity], (error, results) => {
+    if (error) {
+      throw error;
+    }
+    response.status(200).json(results.rows);
+  })
+}
+
+const blockCalendarDates = (request, response) => {
+  const startRange = request.params.startRange;
+  const endRange = request.params.endRange;
+  const userID = request.params.userId;
+  pool.query(
+    `SELECT user_id, start_time, is_deleted from reservations r 
+      WHERE r.start_time > $1
+      AND r.start_time < $2
+      AND user_id = $3
+      AND is_deleted = false`,
+  [startRange, endRange, userID], (error, results) => {
     if (error) {
       throw error;
     }
@@ -187,15 +190,14 @@ const getNextAvailableRoom = (request, response) => {
 }
 
 module.exports = {
-  getUsers,
   getUserById,
   getCreds,
-  getAllRooms,
   getRoomById,
   oneDayCheck,
   getReservationsByUser,
   createReservation,
   updateReservation,
   checkReservationAvailability,
+  blockCalendarDates,
   getNextAvailableRoom,
 }

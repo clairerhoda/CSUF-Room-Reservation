@@ -165,7 +165,8 @@ backButton.addEventListener("click", (e) => {
         
         // get next available room id and then post reservation
         getAvailableRoomID(new Date(startTime).toISOString(),
-             new Date(endTime).toISOString(), parseInt(halfHourIncrements.value),
+             new Date(endTime).toISOString(), 
+                parseInt(halfHourIncrements.value),
                 studentCount.value)
              .then((roomID) => {
              // add reservation to database
@@ -195,7 +196,8 @@ backButton.addEventListener("click", (e) => {
             getRoom(roomID).then((value) => {
                 selectionDescription.textContent = 
                 "You have successfully reserved a room on "
-                + dateFormatted + " for " + timeConvert(halfHourIncrements.value) 
+                + dateFormatted + " for " 
+                + timeConvert(halfHourIncrements.value) 
                 + ". \n Your room is located at " + value;
             });
         });

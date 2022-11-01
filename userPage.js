@@ -92,7 +92,8 @@ xhr.onreadystatechange = async function() {
 
             // deleted reservations are not shown
             if (s.is_deleted == false) {
-                if (new Date().getTime() <= startTime.getTime()) {
+                var hourBeforeNow = new Date().getTime() + 1 * 60 * 60 * 1000
+                if (hourBeforeNow <= startTime.getTime()) {
                     document.getElementById("upcoming-none-message").
                         style.display = "none";
                     const removeBtn = document.createElement('div');
