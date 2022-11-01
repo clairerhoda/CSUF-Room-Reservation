@@ -74,7 +74,8 @@ async function getReservations(start, end, reservationTime, capacity) {
             if (this.readyState == 4 && this.status == 200) {
                 var temp = new Date(this.response[0].available_time)
                 for (const s of this.response) {
-                    if (temp.getTime() === (new Date(s.available_time)).getTime()) {
+                    if (temp.getTime() === (new Date(s.available_time))
+                        .getTime()) {
                         room += 1
                     } else {
                         timesAndCount[temp] = room;
@@ -109,7 +110,8 @@ async function getCalendarDates(reservationTime, studentCount) {
             var dayOfWeek = new Date(openTime)
                 .toLocaleDateString('en-us', {weekday: "short"});
 
-            // opening and close times are different for week days and weekends
+            // opening and close times are different for week days 
+            // and weekends
             if (dayOfWeek == "Fri" || 
                 dayOfWeek == "Sat" || 
                 dayOfWeek == "Sun") {
@@ -127,28 +129,31 @@ async function getCalendarDates(reservationTime, studentCount) {
                 new Date(availableDateDay)
                     .setDate(new Date(availableDateDay).getDate() + 1);
                  availableDateDay = new Date(availableDateDay).toISOString();
-                dayNum++;
                 continue;
-            }
-
-            // if time now is past regular open hours
-            // change to nearest next 30 min time
-            if (new Date().toISOString() > new Date(openTime).toISOString()) {
-                const ms = 1000 * 60 * 30;
-                openTime = new Date(Math.ceil(new Date().getTime() / ms) * ms);
             }
 
             // check if user already has a reservation for the given day
+            // if so we hide it from the users view
+            // (rule: user can only make one reservation a day)
             var dayCheck = await checkDay(new Date(openTime).toISOString(), 
                 new Date(closeTime).toISOString(),
                 getCookie("user_id"));
-            if (dayCheck.length> 0) {
+            if (dayCheck.length > 0) {
                 availableDateDay = 
                 new Date(availableDateDay)
                     .setDate(new Date(availableDateDay).getDate() + 1);
-                 availableDateDay = new Date(availableDateDay).toISOString();
-                dayNum++;
+                availableDateDay = new Date(availableDateDay).toISOString();
                 continue;
+            }
+
+            // if time now is past an hour before regular open hours 
+            // change to nearest next 30 min time
+            var hourBeforeNow = new Date().getTime() + 1 * 60 * 60 * 1000
+            if (hourBeforeNow > new Date(openTime).getTime()) {
+                const ms = 1000 * 60 * 30;
+                openTime = new Date(Math.ceil(new Date().getTime() / ms) * ms);
+                openTime = openTime.setTime(openTime.getTime() + (1*60*60*1000));
+
             }
 
             // fetch available dates from db
@@ -165,7 +170,6 @@ async function getCalendarDates(reservationTime, studentCount) {
                 new Date(availableDateDay)
                     .setDate(new Date(availableDateDay).getDate() + 1);
                 availableDateDay = new Date(availableDateDay).toISOString();
-                dayNum++;
                 continue;
             }
 
@@ -214,8 +218,6 @@ async function getCalendarDates(reservationTime, studentCount) {
             // pre select first calendar day
             if (i == 0) {
                 calendarOption.style.backgroundColor = "white";
-                calendarOption.style.boxShadow = 
-                    "0px 0px 0px 2.5px #527496 inset";
             }
         }
         var dateStart = 
@@ -304,12 +306,10 @@ async function getCalendarDates(reservationTime, studentCount) {
                 var divs = document.querySelectorAll(".calendar-option");
                 [].forEach.call(divs, function(div) {
                     div.style.backgroundColor = "rgba(255, 255, 255, 0)";
-                    div.style.boxShadow = "none";                    
                 });
-                addTimesForDate(dateDict[event.target.value], roomDict[event.target.value])
+                addTimesForDate(dateDict[event.target.value],
+                    roomDict[event.target.value])
                 event.target.style.backgroundColor = "rgb(255, 255, 255)";
-                event.target.style.boxShadow = 
-                    "0px 0px 0px 2.5px #527496 inset";
             }
         })
 

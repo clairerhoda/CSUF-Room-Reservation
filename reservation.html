@@ -19,10 +19,11 @@
 <body>
     <a href="home.html">
         <div id="go-back"> 
-            <div style="padding-left: 5px; font-size: 18px;"> 
+            <div style="font-weight: 700; padding-left: 5px; font-size: 18px;"> 
                 &#8249;&nbsp;&nbsp;
             </div>
-            <div style="line-height: 23px">Go Back to Reservation Home Page</div>
+            <div style="font-weight: 500; line-height: 23px">
+                Go Back to Reservation Home Page</div>
         </div>
     </a>
     
@@ -63,10 +64,10 @@
                     <div id="date-selection-table">
                         <div id="arrow-row">
                             <div onclick="plusSlides(-1)" class="arrow">
-                                &#x3c;
+                                &#9666;
                             </div>
-                            <div onclick="plusSlides(1)" class="arrow">
-                                &#x3e;
+                            <div style="transform:scaleX(-1)" onclick="plusSlides(1)" class="arrow">
+                                &#9666;
                             </div>
                         </div>
                         <div id="date-start"></div>
@@ -81,11 +82,13 @@
     </div>
    
     <div id="footer">
-        <img id="csuf-logo" src="images/csuf-logo.png" alt="CSUF School Logo">
+        <img id="csuf-logo" src="images/csuf-logo.png"
+         alt="CSUF School Logo">
         <div>
             <div >CSUF Room Reservation Services</div>
             <div style="font-size: 16px;">
-                <div id="split"></div><i style="font-size:15px; padding-right: 8px"
+                <div id="split"></div>
+                <i style="font-size:15px; padding-right: 8px"
                  class="fa">&#xf095;</i>
                  (657) 278-2721
                 <div style="padding-top: 5px; color:rgb(172, 172, 253);">
@@ -95,7 +98,8 @@
         </div>
     </div>
 
-    <script type="text/javascript" src="./calendar.js" charset="utf-8"></script>
+    <script type="text/javascript" 
+        src="./calendar.js" charset="utf-8"></script>
     <script type="module" src="./reservation.js" charset="utf-8"></script>
 
 </body>
