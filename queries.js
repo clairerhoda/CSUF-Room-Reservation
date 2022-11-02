@@ -1,10 +1,6 @@
 const Pool = require('pg').Pool
 const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'Room_Reservation',
-  password: 'chese21',
-  port: 5432,
+  database: 'Room_Reservation'
 });
 
 const getUserById = (request, response) => {
@@ -55,12 +51,12 @@ const getReservationsByUser = (request, response) => {
 
 const createReservation = (request, response) => {
   const { room_id, user_id, start_time, end_time, 
-    purpose, number_of_people, created_at, is_deleted } = request.body;
+    number_of_people, created_at, is_deleted } = request.body;
   pool.query(`INSERT INTO reservations (room_id, user_id, start_time,  
-  end_time, purpose, number_of_people, created_at, is_deleted) VALUES
+  end_time, number_of_people, created_at, is_deleted) VALUES
   ($1, $2, $3::TIMESTAMP WITH TIME ZONE, $4::TIMESTAMP WITH TIME ZONE, 
-  $5, $6, $7::TIMESTAMP WITH TIME ZONE, $8)`, 
-  [ room_id, user_id, start_time, end_time, purpose, 
+  $5, $6::TIMESTAMP WITH TIME ZONE, $7)`, 
+  [ room_id, user_id, start_time, end_time, 
     number_of_people, created_at, is_deleted ], (error, results) => {
     if (error) {
       throw error;

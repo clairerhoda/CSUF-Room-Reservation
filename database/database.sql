@@ -61,7 +61,6 @@ CREATE TABLE reservations	(
 	user_id INT REFERENCES users (user_id),
 	start_time TIMESTAMP without time zone NOT NULL,
 	end_time TIMESTAMP without time zone NOT NULL,
-	purpose VARCHAR(100) NOT NULL,
 	number_of_people INT NOT NULL,
 	created_at TIMESTAMP without time zone DEFAULT now() NOT NULL,
 	is_deleted BOOL NOT NULL
