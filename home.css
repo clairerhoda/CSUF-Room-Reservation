@@ -70,15 +70,16 @@ a {
 
 #study-room-img {
     width: 800px;
-    margin: 50px 0 40px 0;
+    margin-bottom: 50px;
 }
 
 #intro-1 {
     font-size: 30px;
-    margin-bottom: 50px;
     text-align: center;
     font-weight: 900;
     color: rgb(70, 70, 70);
+    margin: 120px 0 20px 0;
+
 }
 
 #notice-box {
@@ -194,14 +195,16 @@ a {
     #contact{display: none;}
 }
 
-@media (max-width: 1350px) {
-    #study-room-img {margin-top: 120px}
-}
-
 @media (max-width: 890px) {
     #study-room-img{width: 80%;}
     #notice-box {width: 580px;}
-   
+}
+
+@media (max-width: 720px) {
+    #config-box {width: 100%; align-items: center;
+        flex-direction: column-reverse;}
+    #mascot-img {margin-bottom: 30px}
+    #button-start{margin-bottom: 0; width: 90%;}
 }
 
 @media (max-width: 700px) {
