@@ -76,6 +76,11 @@ xhr.onreadystatechange = async function() {
             reservationTimeSlot.appendChild(endTimeDiv);
             dateTimeRow.appendChild(reservationTimeSlot)
             
+            const reservationContent = document.createElement('div');
+            reservationContent.setAttribute('class', 'reservation-content');
+            reservationContent.setAttribute('style', 'width:100%;' +
+             'display:flex; flex-direction: column');
+
             const reservationDate = document.createElement('div');
             reservationDate.setAttribute('class', 'reservation-date');
             reservationDate.setAttribute('style', 'font-weight: 900');
@@ -84,10 +89,15 @@ xhr.onreadystatechange = async function() {
                 s.start_time).toLocaleDateString("en-US", dateConversionParts);
 
             reservationDate.textContent = 
-                "Scheduled For: " + dateConversion + "\r\n" +
+                "Scheduled For: " + dateConversion + "\r\n";
+            const reservationRoom = document.createElement('div');
+            reservationRoom.setAttribute('class', 'reservation-room');
+            reservationRoom.setAttribute('style', 'font-weight: 400');
+            reservationRoom.textContent = 
                 "Located in room " + await getRoom(s.room_id);
-            dateTimeRow.appendChild(reservationDate)
-
+            reservationContent.appendChild(reservationDate);
+            reservationContent.appendChild(reservationRoom);
+            dateTimeRow.appendChild(reservationContent);
             reservation.appendChild(dateTimeRow);
 
             // deleted reservations are not shown
