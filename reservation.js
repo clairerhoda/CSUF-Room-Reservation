@@ -160,7 +160,6 @@ backButton.addEventListener("click", (e) => {
         backButton.style.display = "none";
         const createdAt = new Date();
         const isDeleted = false;
-        const purpose = ""; // may add purpose section later
         
         // get next available room id and then post reservation
         getAvailableRoomID(new Date(startTime).toISOString(),
@@ -175,7 +174,7 @@ backButton.addEventListener("click", (e) => {
             // create object to store new reservation
             const rsObj = new ReservationDetails(
                 roomID, getCookie("user_id"), startTime, endTime, 
-                purpose, parseInt(studentCount.value), createdAt, isDeleted);
+                parseInt(studentCount.value), createdAt, isDeleted);
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.responseType = 'json';
             xhr.onreadystatechange = function() {
@@ -244,13 +243,11 @@ async function getRoom(roomId) {
 }
 
 function ReservationDetails(roomId, userId, startTime, endTime, 
-        purpose, numberOfPeople, createdAt, isDeleted) {
-
+        numberOfPeople, createdAt, isDeleted) {
 	this.room_id = roomId;
     this.user_id = userId;
     this.start_time = startTime;
     this.end_time = endTime;
-    this.purpose = purpose;
     this.number_of_people = numberOfPeople;
     this.created_at = createdAt;
     this.is_deleted = isDeleted;
