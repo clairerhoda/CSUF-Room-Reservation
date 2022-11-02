@@ -67,7 +67,6 @@ backButton.addEventListener("click", (e) => {
         selectionDescription.textContent = "Select Number of Students (1-14)";
         studentCount.style.display = "flex";
         halfHourIncrements.style.display = "none";
-        document.getElementById("invalidText").style.display = "none";
     }
 
     if (pageNumber == 2) {
@@ -75,7 +74,7 @@ backButton.addEventListener("click", (e) => {
             "How Long Do You Want to Reserve the Room?";
         halfHourIncrements.style.display = "flex";
         dateSelectionTable.style.display = "none";
-        document.getElementById("invalidText").style.display = "none";
+        document.getElementById("invalid-text").style.display = "none";
     }
 
     if (pageNumber == 3) {

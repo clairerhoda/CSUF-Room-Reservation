@@ -283,7 +283,7 @@ async function getCalendarDates(reservationTime, studentCount) {
                 var status = document.querySelectorAll("#select-time-btn");
                 [].forEach.call(rows, function(div) {
                     div.style.boxShadow = "none";
-                    div.style.backgroundColor = "#cdcfd6";
+                    div.style.backgroundColor = "#e7e7e7";
                 });
                 [].forEach.call(status, function(div) {
                     div.style.width = "100px";
