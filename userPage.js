@@ -47,12 +47,13 @@ const xhr = new XMLHttpRequest();
 xhr.open('GET', `http://localhost:3000/reservations/${getCookie("user_id")}`);
 xhr.responseType = 'json';
 
+document.getElementById("loader-box").style.display = "flex";
+
 xhr.onreadystatechange = async function() {
     if (this.readyState == 4 && this.status == 200) {
         for (const s of this.response) {
             var startTime = new Date(s.start_time);
             var endTime = new Date(s.end_time);
-
             const dateTimeRow = document.createElement('div');
             dateTimeRow.setAttribute('class', 'date-time-row');
 
@@ -128,6 +129,7 @@ xhr.onreadystatechange = async function() {
                             document.getElementById("btn-row").
                                 appendChild(yesBtn);
                             yesBtn.addEventListener("click", (e) => {
+                                console.log(s.reservation_id)
                                 xhr.open('PUT', 
                                 `http://localhost:3000/reservations/`+
                                 `${s.reservation_id}`);
@@ -137,12 +139,7 @@ xhr.onreadystatechange = async function() {
                                 xhr.setRequestHeader('Content-Type',
                                      'application/json');
                                 xhr.responseType = 'json';
-                                xhr.onreadystatechange = function() {
-                                    if (this.readyState == 4 &&
-                                        this.status == 200) {
-                                        console.log(this.response);
-                                    }
-                                }
+                               
                                 xhr.send(jsonStr)
                                 document.querySelector('#warning').
                                     style.display = 'none';
@@ -165,7 +162,9 @@ xhr.onreadystatechange = async function() {
                 }
             }
         }
+        document.getElementById("loader-box").style.display = "none";
     }
 }
 
 xhr.send();
+

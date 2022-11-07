@@ -131,10 +131,20 @@ backButton.addEventListener("click", (e) => {
         selectionDescription.textContent = "Select a Date";
         halfHourIncrements.style.display = "none";
         dateSelectionTable.style.display = "flex";
-        getCalendarDates(halfHourIncrements.value, studentCount.value);
+        // check if children times are present, if so delete before 
+        // calling getCalendarDates again
+        if (document.querySelectorAll("#time-selection").length > 0) {
+            document.getElementById("time-selection").remove();
+            document.getElementById("calendar-list").remove();
+            getCalendarDates(halfHourIncrements.value, studentCount.value);
+        } else {
+            getCalendarDates(halfHourIncrements.value, studentCount.value);
+        }
+        
     }
 
     if (pageNumber == 4) {
+        window.scrollTo(0, 0);
         var times  = document.querySelectorAll(".time-row");
         [].forEach.call(times, function(time) {
             if (time.style.backgroundColor == "white") {
@@ -157,6 +167,8 @@ backButton.addEventListener("click", (e) => {
     }
 
     if (pageNumber == 5) {
+        document.getElementById("loader-box").style.display = "flex";
+
         backButton.style.display = "none";
         const createdAt = new Date();
         const isDeleted = false;
@@ -173,13 +185,23 @@ backButton.addEventListener("click", (e) => {
             
             // create object to store new reservation
             const rsObj = new ReservationDetails(
-                roomID, getCookie("user_id"), startTime, endTime, 
+                roomID, getCookie("user_id"), new Date(startTime).toISOString(),
+                new Date(endTime).toISOString(),  
                 parseInt(studentCount.value), createdAt, isDeleted);
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.responseType = 'json';
             xhr.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    console.log(this.response);
+                console.log(this.status, this.readyState)
+                if (this.status != 201 && this.readyState != 4) {
+                    selectionDescription.textContent = 
+                    "There was a problem setting your reservation. " +
+                    "You might have tried to make a reservation for a" + 
+                    " time that is now expired or no longer available." + 
+                    " Please try making a new reservation. \n\nThis page will be "+
+                    "automatically reloaded in 15 seconds.";
+                    setTimeout(() => {
+                        location.reload()
+                    }, "15000")
                 }
             }
             // JSON encoding 
@@ -193,11 +215,13 @@ backButton.addEventListener("click", (e) => {
                 
             getRoom(roomID).then((value) => {
                 selectionDescription.textContent = 
-                "You have successfully reserved a room on "
+                "You have successfully reserved a room for "
                 + dateFormatted + " for " 
                 + timeConvert(halfHourIncrements.value) 
                 + ". \n Your room is located at " + value;
             });
+            document.getElementById("loader-box").style.display = "none";
+
         });
        
         document.getElementById("next-btn").textContent = "Finish";
