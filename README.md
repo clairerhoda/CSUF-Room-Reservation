@@ -17,9 +17,9 @@ reservation at any point before the reservation time is passed.
 
 This website is created using HTML / CSS / JavaScript / PostgreSQL.
 
-Steps
+Steps to Run Website Locally
 1. npm install express --save
 2. npm install --save-dev cors
-3. In one terminal enter the command to run the Rest Server: node indexRest
-4. In a different terminal enter the command to run the Rest Client: node index
+3. In one terminal, enter the command to run the Rest Server: node indexRest
+4. In a different terminal enter the command to run the HTML/CSS: node index
 5. Start website using: http://localhost:4000/home.html 

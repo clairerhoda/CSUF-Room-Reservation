@@ -1,4 +1,8 @@
 
+/*
+	index.js is responsible for running the HTML/CSS on a server
+	that can be run locally on port 4000.
+*/
 const express = require('express')
 const app = express()
 app.set('port', 4000)

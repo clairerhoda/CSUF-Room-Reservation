@@ -1,3 +1,7 @@
+/*
+  indexRest.js is responsible for running the functionalities
+  of nodeJS that involve calls to the database.
+*/
 const express = require('express');
 const app = express()
 const cors = require('cors')

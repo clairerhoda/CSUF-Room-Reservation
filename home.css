@@ -42,6 +42,7 @@ a {
 }
 
 #uni-title {
+    cursor: pointer;
     display: flex;
     align-items: center;
     color: white;
@@ -59,6 +60,7 @@ a {
     padding: 20px 0 20px 0;
     background-color: #0b355f;
     width: 100%;
+    cursor: pointer;
 }
 
 #intro {
@@ -97,24 +99,24 @@ a {
 #notice-box {
     background-color: rgb(239, 239, 239);
     border-radius: 0 8px 8px 0;
-    padding: 50px 40px 30px 40px;
+    padding: 40px 40px 40px 40px;
     height: 330px;
 }
 
 #info-notes {
     font-size: 18px;
-    margin-bottom: 23px;
+    margin-bottom: 15px;
     text-align: center;
     font-weight: 900;
     display: flex;
     justify-self: flex-start;
-    color: rgb(70, 70, 70);
+    color: rgb(25, 25, 25);
 }
 
 .intro-2 {
     color: rgb(70, 70, 70);
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     text-align: start;
     font-size: 17px;
 }
@@ -150,6 +152,7 @@ a {
 
 #mascot-img {
     width: 200px;
+    height: 200px;
     display: flex;
 }
 
@@ -174,7 +177,7 @@ a {
     background-color: #505050;
     text-align: center;
     padding: 15px 20px 15px 20px;
-    width: 180px;
+    width: 200px;
     justify-content: center;
     border-radius: 10px;
     cursor: pointer;
@@ -200,6 +203,7 @@ a {
 
 #csuf-logo {
     width: 150px;
+    height: 150px;
     padding-right: 100px;
 }
 
