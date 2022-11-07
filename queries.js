@@ -5,8 +5,8 @@
   it is the main operating system of the website.
 */
 
-const dotenv = require('dotenv');
-dotenv.config();
+// const dotenv = require('dotenv');
+// dotenv.config();
 
 // AWS databse usage
 const Pool = require('pg').Pool
@@ -18,7 +18,7 @@ const Pool = require('pg').Pool
 //   port: process.env.PORT,
 // });
 
-// ocal database usage
+// local database usage
 const pool = new Pool({
   database: 'Room_Reservation',
   port: 5432,
