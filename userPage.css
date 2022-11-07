@@ -5,6 +5,31 @@
     padding-bottom: 100px;
 }
 
+#loader-box {
+    display: none;
+    background-color: #f1f1f1;
+    z-index: 3;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+#loader {
+    border: 10px solid #e7e7e7; /* Light grey */
+    border-top: 10px solid #152e5e; /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+}
+  
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 #no-reservations {
     display: none;
     justify-content: center;
@@ -139,6 +164,7 @@
 
 #btn-row {
     display: flex;
+    flex-direction: row-reverse;
     align-items: center;
     justify-content: center;
     margin-top: 20px;
@@ -155,7 +181,7 @@
     align-self: center;
     justify-content: center;
     cursor: pointer;
-    margin-right: 20px;
+    margin-left: 20px;
 }
 
 #yes-btn {

@@ -22,9 +22,14 @@ var slideIndex = 1;
 
 // Next/previous controls
 function plusSlides(n) {
-    if (slideIndex + n != 0 && slideIndex + n != 12) {
-        showSlides(slideIndex += n);
+    var options = document.getElementById("calendar-list");
+    if (options.childElementCount > 5) {
+        if (slideIndex + n != 0 
+            && slideIndex + n != (options.childElementCount-3)) {
+            showSlides(slideIndex += n);
+        }
     }
+   
 }
 
 function showSlides(n) {
@@ -92,6 +97,7 @@ async function getReservations(start, end, reservationTime, capacity) {
 
 async function getCalendarDates(reservationTime, studentCount) {
     try {
+        document.getElementById("loader-box").style.display = "flex";
         var availableDateDay = new Date();
         var availableDateDay14 = new Date(Date.now() + 12096e5);
         availableDateDay14.setHours(24,0,0,0);
@@ -153,7 +159,6 @@ async function getCalendarDates(reservationTime, studentCount) {
                 const ms = 1000 * 60 * 30;
                 openTime = new Date(Math.ceil(new Date().getTime() / ms) * ms);
                 openTime = openTime.setTime(openTime.getTime() + (1*60*60*1000));
-
             }
 
             // fetch available dates from db
@@ -163,6 +168,7 @@ async function getCalendarDates(reservationTime, studentCount) {
                 reservationTime,
                 studentCount
             );
+
 
             // if no times available, do not show date
             if (availableTimes.length == 0) {
@@ -271,6 +277,7 @@ async function getCalendarDates(reservationTime, studentCount) {
                 timeRow.setAttribute("id", start.getTime());
                 timeSelection.appendChild(timeRow);
             }
+            document.getElementById("loader-box").style.display = "none";
         }
        
         document.getElementById("date-selection-table")
@@ -286,7 +293,7 @@ async function getCalendarDates(reservationTime, studentCount) {
                     div.style.backgroundColor = "#e7e7e7";
                 });
                 [].forEach.call(status, function(div) {
-                    div.style.width = "100px";
+                    div.style.width = "90px";
                     div.style.height = "35px";
                     div.textContent = "Select";
                 });               
@@ -294,8 +301,8 @@ async function getCalendarDates(reservationTime, studentCount) {
                     "0px 0px 0px 2.5px #527496 inset";
                 event.target.style.backgroundColor = "white";
                 var child = event.target.querySelectorAll('#select-time-btn');
-                child[0].style.width = "30px";
-                child[0].style.height = "30px";
+                child[0].style.width = "35px";
+                child[0].style.height = "35px";
                 child[0].textContent = "✓";
             }
         })
@@ -312,8 +319,6 @@ async function getCalendarDates(reservationTime, studentCount) {
                 event.target.style.backgroundColor = "rgb(255, 255, 255)";
             }
         })
-
-        getCalendarDates = function(){};
 
     } catch(error) {
         console.log(error);
