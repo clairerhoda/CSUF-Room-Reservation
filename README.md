@@ -1,5 +1,5 @@
 # CSUFRoomReservation
--- Projet By Adrian Puentes and Claire Rhoda
+-- Project By Adrian Puentes and Claire Rhoda
 
 This website application allows students to reserve study rooms that are 
 available in the Pollak Library through a reservation system. Students 
@@ -12,8 +12,8 @@ how long the room will be reserved for. The user will then be promoted with
 every possible reservation they can make with the times available for the
 next 2 weeks. Last step is to review the reservation details and to select
 confirm. Users can view their past and current reservations by selecting the
-Configure Reservations button found in the home page. Users can delete a
-reservation at any point before the reservation time is passed.
+"Configure Reservations" button found in the home page. Users can delete a
+reservation up to one hour before the reservation start time has passed.
 
 This website is created using HTML / CSS / JavaScript / PostgreSQL.
 
