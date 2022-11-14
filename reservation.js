@@ -191,7 +191,6 @@ backButton.addEventListener("click", (e) => {
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.responseType = 'json';
             xhr.onreadystatechange = function() {
-                console.log(this.status, this.readyState)
                 if (this.status != 201 && this.readyState != 4) {
                     selectionDescription.textContent = 
                     "There was a problem setting your reservation. " +
