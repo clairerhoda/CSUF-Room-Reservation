@@ -15,7 +15,7 @@ const pool = new Pool({
   user: process.env.DB_USER,
   database: process.env.DATABASE,
   password: process.env.DB_PASSWORD,
-  port: process.env.PORT,
+  port: process.env.DB_PORT,
 });
 
 // local database usage

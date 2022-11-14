@@ -6,7 +6,7 @@ const express = require('express');
 const app = express()
 const cors = require('cors')
 const db = require('./queries');
-const PORT = process.env.PORT || 3000;
+const port = 3000;
 
 app.use(cors());
 
@@ -31,6 +31,11 @@ app.get('/reservations/:startRange/:endRange/:userId',
 app.get('/room/:startRange/:endRange/:reservationTime/:capacity', 
   db.getNextAvailableRoom);
 
-app.listen(PORT, () => {
-  console.log(`server started on port ${PORT}`);
-});
+app.listen(port, () => {
+  console.log(`App running on port ${port}.`);
+})
+
+// const PORT = process.env.PORT || 3000;
+// app.listen(PORT, () => {
+//   console.log(`server started on port ${PORT}`);
+// });
