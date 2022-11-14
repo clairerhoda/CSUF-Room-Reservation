@@ -129,7 +129,6 @@ xhr.onreadystatechange = async function() {
                             document.getElementById("btn-row").
                                 appendChild(yesBtn);
                             yesBtn.addEventListener("click", (e) => {
-                                console.log(s.reservation_id)
                                 xhr.open('PUT', 
                                 `http://localhost:3000/reservations/`+
                                 `${s.reservation_id}`);

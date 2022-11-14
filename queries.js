@@ -4,25 +4,25 @@
   is one of the most important files of the project because
   it is the main operating system of the website.
 */
-
-// const dotenv = require('dotenv');
-// dotenv.config();
-
-// AWS databse usage
 const Pool = require('pg').Pool
-// const pool = new Pool({
-//   host: process.env.DB_HOST,
-//   user: process.env.DB_USER,
-//   database: process.env.DATABASE,
-//   password: process.env.DB_PASSWORD,
-//   port: process.env.PORT,
-// });
+
+const dotenv = require('dotenv');
+dotenv.config();
+
+// render database
+const pool = new Pool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  database: process.env.DATABASE,
+  password: process.env.DB_PASSWORD,
+  port: process.env.PORT,
+});
 
 // local database usage
-const pool = new Pool({
-  database: 'Room_Reservation',
-  port: 5432,
-});
+// const pool = new Pool({
+//   database: 'Room_Reservation',
+//   port: 5432,
+// });
 
 const getUserById = (request, response) => {
   const id = parseInt(request.params.id);
