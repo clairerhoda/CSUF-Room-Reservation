@@ -10,11 +10,7 @@ dotenv.config();
 
 // render database
 const pool = new Pool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  database: process.env.DATABASE,
-  password: process.env.DB_PASSWORD,
-  port: process.env.PORT,
+  connectionString: DB_HOST
 });
 
 // local database usage

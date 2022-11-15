@@ -31,7 +31,6 @@ app.get('/reservations/:startRange/:endRange/:userId',
 app.get('/room/:startRange/:endRange/:reservationTime/:capacity', 
   db.getNextAvailableRoom);
 
-
 app.listen(PORT, () => {
   console.log(`server started on port ${PORT}`);
 });
