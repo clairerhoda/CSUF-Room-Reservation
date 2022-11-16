@@ -4,6 +4,7 @@
   is one of the most important files of the project because
   it is the main operating system of the website.
 */
+const Pool = require('pg').Pool
 
 // render database
 const pool = new Pool({
