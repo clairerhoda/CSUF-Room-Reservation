@@ -4,13 +4,10 @@
   is one of the most important files of the project because
   it is the main operating system of the website.
 */
-const Pool = require('pg').Pool
-const dotenv = require('dotenv');
-dotenv.config();
 
 // render database
 const pool = new Pool({
-  connectionString: DB_HOST
+  connectionString: "postgres://room_reservation_user:tU1Egii2uyTYQ6WBMxtx4ehoEDgF3JqY@dpg-cdp9v9ha6gdooi1r83gg-a.oregon-postgres.render.com/room_reservation?ssl=true"
 });
 
 // local database usage
